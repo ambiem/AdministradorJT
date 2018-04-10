@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+	<h:form>
+		<h:body>
+			<p:dialog id="dialogAgregarCliente" header="Nuevo Cliente" widgetVar="modalCapturaCliente" minHeight="50" resizable="false" modal="true" >
+				
+				<p:panelGrid columns="2" style="border: none;">
+				
+					<p:outputLabel for="nombreModalCliente" value="Nombre:" />
+					<p:inputText id="nombreModalCliente"  value="#{clienteBean.cliente.nombre}" required="true"/>
+					 
+					<p:outputLabel for="conceptoModalCliente" value="Concepto:" />
+					<p:inputText id="conceptoModalCliente"  value="#{clienteBean.cliente.concepto}" required="true"/> 
+	
+					<p:outputLabel for="porcentajeCliente" value="Porcentaje: " /> 
+					<p:inputNumber id="porcentajeCliente" value="#{clienteBean.cliente.porcentaje}" required="true"/> 
+					
+					<p:commandButton value="Grabar" action="#{clienteBean.agregar}" onclick="modalCapturaCliente.hide()" tabindex="3"/>
+					<p:commandButton value="Cancelar" onclick="modalCapturaCliente.hide()" immediate="true"/>
+				</p:panelGrid>
+			</p:dialog>
+		</h:body>
+	</h:form>
+</html>

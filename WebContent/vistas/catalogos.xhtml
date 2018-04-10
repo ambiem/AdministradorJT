@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+	<ui:include src="modales/modalCapturaCatalogo.xhtml"/>
+</h:head>
+
+<h:form >
+	<h:body>
+		<p:panel id="panelBusquedaCatalogos" header="Busqueda" style="border: none;">
+			<p:panelGrid columns="4" layout="grid" style="border: none;">
+			
+				<p:outputLabel for="conceptoCatalogo" value="Concepto:" />
+				<p:inputText id="conceptoCatalogo" value="#{catalogoBean.conceptoB}"/>
+
+				<p:outputLabel for="clasificacionCatalogo" value="Clasificacion" />
+				<p:selectOneMenu id="clasificacionCatalogo" label="Clasificacion"  value="#{catalogoBean.clasificacionB}">
+					<f:selectItem itemLabel="Seleccione.."/> 
+					<f:selectItem itemLabel="Producto" itemValue="1" />
+					<f:selectItem itemLabel="Cliente" itemValue="2" />
+				</p:selectOneMenu>
+				
+				<p:outputLabel for="empresaCatalogo" value="Empresa" />
+				<p:inputText id="empresaCatalogo" value="#{catalogoBean.empresaB}"/>
+
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" layout="grid"  style="border: none;  text-align:center;">
+				<p:commandButton update="tablaCatalogos" value="Buscar" action="#{catalogoBean.buscar}" />
+				<p:commandButton update="tablaCatalogos" value="Buscar Todo" action="#{catalogoBean.buscarTodo}"/>
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:panel id="panelCaptura" header="Captura" style="border: none;">
+			<p:panelGrid columns="1" layout="grid" style="border: none; text-align:center;">
+				<p:commandButton value="Nuevo catalogo" type="button" onclick="PF('modalCapturaCatalogo').show();" />
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:dataTable id="tablaCatalogos" var="catalogos" value="#{catalogoBean.listaCatalogo}" editable="true" paginator="true"  rows="30"> 
+		
+			<p:ajax event="rowEdit" listener="#{catalogoBean.editar}" />
+       		<p:ajax event="rowEditCancel" listener="#{catalogoBean.cancelarEdicion}" />  
+       				
+			<p:column headerText="Fecha">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{catalogos.fecha}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:calendar value="#{catalogos.fecha}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Concepto">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{catalogos.concepto}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{catalogos.concepto}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Clasificacion">
+				<p:cellEditor>
+				 	<f:facet name="output">
+				 		<h:outputText value="#{catalogos.tipoClasificacion == 1 ? 'Producto' : 'Cliente'}" />
+				 	</f:facet>
+				 	<f:facet name="input">
+				 		<p:selectOneMenu label="Clasificacion"  value="#{catalogos.tipoClasificacion}" required="true">
+							<f:selectItem itemLabel="Producto" itemValue="1" />
+							<f:selectItem itemLabel="Cliente" itemValue="2" />
+						</p:selectOneMenu>
+				 	</f:facet>
+				 </p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Empresa">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText  value="#{catalogos.empresa}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{catalogos.empresa}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Porcentaje">
+				<p:cellEditor>
+				 	<f:facet name="output">
+				 		<h:outputText  value="#{catalogos.porcentaje}" />
+				 	</f:facet>
+				 	<f:facet name="input">
+						<p:inputNumber value="#{catalogos.porcentaje}" />				 		
+				 	</f:facet>
+				 </p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Editar" style="width:50px;">
+				<p:rowEditor />
+			</p:column>
+			<p:column headerText="Borrar" style="width:60px;">
+				<p:commandButton update="tablaCatalogos" label="borrar" title="X" action="#{catalogoBean.borrar(catalogos)}" />
+			</p:column>
+
+		</p:dataTable>
+	</h:body>
+</h:form>
+</html>

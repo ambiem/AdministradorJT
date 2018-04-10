@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+	<ui:include src="modales/modalCapturaCotizacion.xhtml"/>
+</h:head>
+
+<h:form >
+	<h:body>
+		<p:panel id="panelBusquedaCotizacion" header="Busqueda" style="border: none;">
+			<p:panelGrid columns="4" layout="grid" style="border: none;">
+			
+				<p:outputLabel for="fechaInicioCotizacion" value="Fecha Inicio:" />
+				<p:calendar id="fechaInicioCotizacion" value="#{cotizacionBean.fechaInicioB}" />
+
+				<p:outputLabel for="fechaFinCotizacion" value="Fecha Fin:" />
+				<p:calendar id="fechaFinCotizacion" value="#{cotizacionBean.fechaFinB}" />
+				
+				
+				<p:outputLabel for="clienteCotizaciones" value="Cliente" />
+				<p:selectOneMenu id="clienteCotizaciones" value="#{cotizacionBean.clienteB}"> 
+					<f:selectItem itemLabel="Seleccione.."/> 
+					<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+				</p:selectOneMenu>	
+				
+				<p:outputLabel for="empresaCotizaciones" value="Empresas" />
+				<p:selectOneMenu id="empresaCotizaciones" value="#{cotizacionBean.empresaB}"> 
+					<f:selectItem itemLabel="Seleccione.."/>
+					<f:selectItems value="#{empresaBean.listaEmpresas}" var="empresa" itemLabel="#{empresa.nombre}" itemValue="#{empresa.idEmpresa}" /> 
+				</p:selectOneMenu>	
+			
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" layout="grid"  style="border: none;  text-align:center;">
+				<p:commandButton value="Buscar" action="#{cotizacionBean.buscar}" update="tablaCotizacion"  />
+				<p:commandButton value="Buscar Todo" action="#{cotizacionBean.buscarTodo}" update="tablaCotizacion"  />
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:panel id="panelCapturaCotizacion" header="Captura" style="border: none;">
+			<p:panelGrid columns="1" layout="grid" style="border: none; text-align:center;">
+				<p:commandButton value="Nueva Cotizacion" type="button" onclick="PF('modalCapturaCotizacion').show();" />
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:panel id="panelResultadosTabla" header="Datos" style="border: none;" scrollable="true" scrollWidth="100%" >
+			
+				<p:dataTable id="tablaCotizacion" var="cotizacion" value="#{cotizacionBean.listaCotizaciones}" editable="true" paginator="true"  rows="30" scrollable="true" scrollWidth="150%"> 
+				
+					<p:ajax event="rowEdit" listener="#{cotizacionBean.editar}" update="tablaCotizacion"/>
+		       		<p:ajax event="rowEditCancel" listener="#{cotizacionBean.cancelarEdicion}" />  
+		       		
+					<p:column headerText="Fecha" style="width:160">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{cotizacion.fecha}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:calendar value="#{cotizacion.fecha}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Cliente">
+						<p:cellEditor>
+						 	<f:facet name="output">
+						 		<h:outputText  value="#{cotizacion.nombreCliente}" />
+						 	</f:facet>
+						 	<f:facet name="input">
+								<p:selectOneMenu value="#{cotizacion.idCliente}">
+     								<f:selectItem itemLabel="Seleccione.."/>
+									<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+					  				<f:ajax render="empresasCotizacionTabla porcentajeCotizacionTabla" listener="#{cotizacionBean.actualizarEmpresasTabla}" />
+								</p:selectOneMenu>					 	 	
+						 	</f:facet>
+						 </p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Empresa" style="width:180">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{cotizacion.nombreEmpresa}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:selectOneMenu value="#{cotizacion.idEmpresa}" id="empresasCotizacionTabla">
+									<f:selectItems value="#{cotizacionBean.listaEmpresasTabla}" var="empresa" itemLabel="#{empresa.nombre}" itemValue="#{empresa.idEmpresa}" />
+								</p:selectOneMenu>					 		
+						 	</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Cantidad">
+						<p:cellEditor>
+						 	<f:facet name="output">
+						 		<h:outputText value="#{cotizacion.cantidad}" >
+						 			<f:convertNumber pattern="¤#,##0.00" />
+						 		</h:outputText>
+						 	</f:facet>
+						 	<f:facet name="input">
+								<p:inputNumber value="#{cotizacion.cantidad}" >
+									<f:ajax render="porcentajeCotizacionTabla" />
+									<f:ajax render="totalPesosCotizacionTabla" />
+									<f:ajax render="comisionCotizacionTabla" />
+									<f:ajax render="totalComisionExtraCotizacionTabla" />
+									<f:ajax render="granTotalCotizacionTabla" />
+									<f:ajax render="tcPonderadoCotizacionTabla" />
+								</p:inputNumber>				 		
+						 	</f:facet>
+						 </p:cellEditor>
+					</p:column>
+					<p:column headerText="TC">
+						<p:cellEditor>
+						 	<f:facet name="output">
+						 		<h:outputText value="#{cotizacion.tc}" >
+						 			<f:convertNumber pattern="¤#,##0.0000" />
+						 		</h:outputText>
+						 	</f:facet>
+						 	<f:facet name="input">
+								<p:inputNumber value="#{cotizacion.tc}" decimalPlaces="4" >
+									<f:ajax render="porcentajeCotizacionTabla" />
+									<f:ajax render="totalPesosCotizacionTabla" />
+									<f:ajax render="comisionCotizacionTabla" />
+									<f:ajax render="totalComisionExtraCotizacionTabla" />
+									<f:ajax render="granTotalCotizacionTabla" />
+									<f:ajax render="tcPonderadoCotizacionTabla" />
+								</p:inputNumber>				 		
+						 	</f:facet>
+						 </p:cellEditor>
+					</p:column>
+					<p:column headerText="Porcentaje">
+				 		<h:outputText value="#{cotizacion.porcentaje}" id="porcentajeCotizacionTabla">
+				 			<f:convertNumber pattern="¤#,##0.00" currencySymbol="%" />
+				 		</h:outputText>
+					</p:column>
+					<p:column headerText="Total Pesos">
+				 		<h:outputText value="#{cotizacion.totalPesos}" id="totalPesosCotizacionTabla">
+				 			<f:convertNumber pattern="¤#,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Comision">
+				 		<h:outputText value="#{cotizacion.comision}" id="comisionCotizacionTabla">
+				 			<f:convertNumber pattern="¤#,##0.00" />
+				 		</h:outputText>
+					</p:column>
+					<p:column headerText="Comision Extra">
+						<p:cellEditor>
+						 	<f:facet name="output">
+						 		<h:outputText value="#{cotizacion.comisionExtra}" >
+						 			<f:convertNumber pattern="¤#,##0.00" />
+						 		</h:outputText>
+						 	</f:facet>
+						 	<f:facet name="input">
+								<p:inputNumber value="#{cotizacion.comisionExtra}" >
+									<f:ajax render="porcentajeCotizacionTabla" />
+									<f:ajax render="totalPesosCotizacionTabla" />
+									<f:ajax render="comisionCotizacionTabla" />
+									<f:ajax render="totalComisionExtraCotizacionTabla" />
+									<f:ajax render="granTotalCotizacionTabla" />
+									<f:ajax render="tcPonderadoCotizacionTabla" />
+								</p:inputNumber>				 		
+						 	</f:facet>
+						 </p:cellEditor>
+					</p:column>
+					<p:column headerText="Total Comision Extra">
+				 		<h:outputText value="#{cotizacion.totalComisionExtra}" id="totalComisionExtraCotizacionTabla">
+				 			<f:convertNumber pattern="¤#,##0.00" />
+						 </h:outputText>
+					</p:column>
+					<p:column headerText="Gran total">
+				 		<h:outputText value="#{cotizacion.granTotal}" id="granTotalCotizacionTabla">
+				 			<f:convertNumber pattern="¤#,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="TC Ponderado">
+					 		<h:outputText value="#{cotizacion.tcPonderado}" id="tcPonderadoCotizacionTabla">
+					 			<f:convertNumber pattern="¤#,##0.00" />
+						 	</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Editar" style="width:50px;">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="Borrar" style="width:60px;">
+						<p:commandButton update="tablaCotizacion" label="borrar" title="X" action="#{cotizacionBean.borrar(cotizacion)}" />
+					</p:column>
+		
+				</p:dataTable>
+			
+		</p:panel>
+	</h:body>
+</h:form>
+</html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+	<ui:include src="modales/modalCapturaEmpresa.xhtml"/>
+</h:head>
+
+<h:form >
+	<h:body>
+		<p:panel id="panelBusquedaCatalogos" header="Busqueda" style="border: none;">
+			<p:panelGrid columns="4" layout="grid" style="border: none;">
+			
+				<p:outputLabel for="nombreEmpresa" value="Nombre:" />
+				<p:inputText id="nombreEmpresa" value="#{empresaBean.nombreB}"/>
+
+				<p:outputLabel for="clienteEmpresa" value="Cliente" />
+				<p:selectOneMenu id="clienteEmpresa" value="#{empresaBean.clienteB}">
+					<f:selectItem itemLabel="Seleccione.."/> 
+					<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+				</p:selectOneMenu>		
+
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" layout="grid"  style="border: none;  text-align:center;">
+				<p:commandButton update="tablaEmpresas" value="Buscar" action="#{empresaBean.buscar}" />
+				<p:commandButton update="tablaEmpresas" value="Buscar Todo" action="#{empresaBean.buscarTodo}"/>
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:panel id="panelCapturaEmpresa" header="Captura" style="border: none;">
+			<p:panelGrid columns="1" layout="grid" style="border: none; text-align:center;">
+				<p:commandButton value="Nueva empresa" type="button" onclick="PF('modalCapturaEmpresa').show();" />
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:dataTable id="tablaEmpresas" var="empresas" value="#{empresaBean.listaEmpresas}" editable="true" paginator="true"  rows="30"> 
+		
+			<p:ajax event="rowEdit" listener="#{empresaBean.editar}" />
+       		<p:ajax event="rowEditCancel" listener="#{empresaBean.cancelarEdicion}" />  
+       				
+			<p:column headerText="Fecha">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{empresas.fecha}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:calendar value="#{empresas.fecha}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Nombre">
+				<p:cellEditor>
+				 	<f:facet name="output">
+				 		<h:outputText  value="#{empresas.nombre}" />
+				 	</f:facet>
+				 	<f:facet name="input">
+						<p:inputText value="#{empresas.nombre}" />				 		
+				 	</f:facet>
+				 </p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Cliente">
+				<p:cellEditor>
+				 	<f:facet name="output">
+				 		<h:outputText  value="#{empresas.nombreCliente}" />
+				 	</f:facet>
+				 	<f:facet name="input">
+						<p:selectOneMenu value="#{empresas.idCliente}">
+							<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+						</p:selectOneMenu>					 		
+				 	</f:facet>
+				 </p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Editar" style="width:50px;">
+				<p:rowEditor />
+			</p:column>
+			<p:column headerText="Borrar" style="width:60px;">
+				<p:commandButton update="tablaEmpresas" label="borrar" title="X" action="#{empresaBean.borrar(empresas)}" />
+			</p:column>
+
+		</p:dataTable>
+	</h:body>
+</h:form>
+</html>

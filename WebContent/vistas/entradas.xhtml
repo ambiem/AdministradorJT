@@ -1,0 +1,133 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	>
+
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+	<ui:include src="modales/modalCapturaEntrada.xhtml"/>
+</h:head>
+
+	<h:form>
+		<h:body>
+				<p:growl id="msgs" showDetail="true"/>
+				<p:panel id="panelBusqueda" header="Busqueda" style="border: none;">
+					<p:panelGrid columns="4" layout="grid" style="border: none;">
+					
+						<p:outputLabel for="concepto" value="Concepto:" />
+						<p:inputText id="concepto" value="#{entradasSalidasBean.conceptoB}"/>
+		
+						<p:outputLabel for="tipoMovimiento" value="Tipo Movimiento:" />
+						<p:selectOneMenu id="tipoMovimiento" label="Tipo movimiento"  value="#{entradasSalidasBean.tipoMovimientoB}" >
+							<f:selectItem itemLabel="Seleccione.."/> 
+							<f:selectItem itemLabel="Entradas" itemValue="1" />
+							<f:selectItem itemLabel="Salidas" itemValue="2" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="fechaInicio" value="Fecha Inicio:" />
+						<p:calendar id="fechaInicio" value="#{entradasSalidasBean.fechaInicioB}" />
+		
+						<p:outputLabel for="fechaFin" value="Fecha Fin:" />
+						<p:calendar id="fechaFin" value="#{entradasSalidasBean.fechaFinB}" />
+						
+						<p:outputLabel for="clienteEntrada" value="Cliente" />
+						<p:selectOneMenu id="clienteEntrada" value="#{entradasSalidasBean.clienteB}"> 
+							<f:selectItem itemLabel="Seleccione.."/> 
+							<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+						</p:selectOneMenu>	
+						
+					</p:panelGrid>
+		
+					<p:panelGrid columns="2" layout="grid"  style="border: none;  text-align:center;">
+						<p:commandButton update="tablaOperaciones" value="Buscar" action="#{entradasSalidasBean.buscar}"/>
+						<p:commandButton update="tablaOperaciones" value="Buscar Todo" action="#{entradasSalidasBean.buscarTodo}"/> 
+					</p:panelGrid>
+				</p:panel>
+		
+				<p:panel id="panelCaptura" header="Captura" style="border: none;">
+					<p:panelGrid columns="1" layout="grid" style="border: none; text-align:center;">
+						<p:commandButton value="Nueva Operacion" type="button" onclick="PF('modalCapturaEntrada').show();" />
+					</p:panelGrid>
+				</p:panel>
+		
+				<p:dataTable id="tablaOperaciones" var="operaciones" value="#{entradasSalidasBean.listaEntradaSalida}" editable="true" paginator="true"  rows="30"> 
+					
+					<p:ajax event="rowEdit" listener="#{entradasSalidasBean.editar}" update="tablaOperaciones"/>
+       				<p:ajax event="rowEditCancel" listener="#{entradasSalidasBean.cancelarEdicion}" />  
+       				
+					<p:column headerText="Fecha">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{operaciones.fecha}" /></f:facet>
+	               			<f:facet name="input">
+	               				<p:calendar value="#{operaciones.fecha}" style="width:100%"/>
+	               			</f:facet>
+	               		</p:cellEditor>
+					</p:column>
+		
+					<p:column headerText="Concepto">
+						<p:cellEditor >
+							<f:facet name="output"><h:outputText value="#{operaciones.concepto}" /></f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{operaciones.concepto}"/>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Cliente">
+						<p:cellEditor>
+						 	<f:facet name="output">
+						 		<h:outputText  value="#{operaciones.nombreCliente}" />
+						 	</f:facet>
+						 	<f:facet name="input">
+								<p:selectOneMenu value="#{operaciones.idCliente}">
+									<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+								</p:selectOneMenu>					 		
+						 	</f:facet>
+						 </p:cellEditor>
+					</p:column>
+		
+					<p:column headerText="Entrada">
+							<p:cellEditor rendered="#{operaciones.tipoOperacion == 1}">
+								<f:facet name="output">
+									<h:outputText value="#{operaciones.monto}" >
+										<f:convertNumber pattern="¤#,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{operaciones.monto}"/>
+								</f:facet>
+							</p:cellEditor>
+					</p:column>
+		
+					<p:column headerText="Salida">
+							<p:cellEditor rendered="#{operaciones.tipoOperacion == 2}">
+								<f:facet name="output">
+									<h:outputText value="#{operaciones.monto}" >
+										<f:convertNumber pattern="¤#,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{operaciones.monto}"/>
+								</f:facet>
+							</p:cellEditor>
+					</p:column>
+		
+					<p:column headerText="Saldo">
+						<h:outputText value="#{operaciones.saldo}" >
+							<f:convertNumber pattern="¤#,##0.00" />
+						</h:outputText>
+					</p:column>
+		
+					<p:column headerText="Editar" style="width:50px;">
+		 	           	<p:rowEditor />
+					</p:column>
+					<p:column headerText="Borrar" style="width:60px;">
+		 	            	<p:commandButton update="tablaOperaciones" label="borrar" title="X" action="#{entradasSalidasBean.borrar(operaciones)}" />
+					</p:column>
+		
+				</p:dataTable>
+		</h:body>
+	</h:form>
+</html>

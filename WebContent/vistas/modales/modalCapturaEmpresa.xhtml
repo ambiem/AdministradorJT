@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+	<h:form>
+		<h:body>
+			<p:dialog id="dialogAgregarEmpresa" header="Nueva Empresa" widgetVar="modalCapturaEmpresa" minHeight="50" resizable="false" modal="true" >
+				
+				<p:panelGrid columns="2" style="border: none;">
+				
+					<p:outputLabel for="nombreModalEmpresa" value="Nombre:" />
+					<p:inputText id="nombreModalEmpresa"  value="#{empresaBean.empresa.nombre}" required="true"/>
+					 
+					<p:outputLabel for="clienteModalEmpresa" value="Cliente" />
+					<p:selectOneMenu id="clienteModalEmpresa" value="#{empresaBean.empresa.idCliente}" required="true">
+						<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+					</p:selectOneMenu>	
+					
+					<p:commandButton value="Grabar" action="#{empresaBean.agregar}" onclick="modalCapturaEmpresa.hide()" tabindex="4"/>
+					<p:commandButton value="Cancelar" onclick="modalCapturaEmpresa.hide()" immediate="true"/>
+				</p:panelGrid>
+			</p:dialog>
+		</h:body>
+	</h:form>
+</html>

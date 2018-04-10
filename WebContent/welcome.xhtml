@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Administrador JT</title>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+
+<h:body>
+	<p:tabView >
+		<p:tab id="tab1" title="Entradas-Salidas">
+			<ui:include src="vistas/entradas.xhtml" />
+		</p:tab>
+		<p:tab id="tab2" title="Cotizaciones">
+			<ui:include src="vistas/cotizaciones.xhtml" />
+		</p:tab>
+		<p:tab id="tab3" title="Clientes">
+			<ui:include src="vistas/clientes.xhtml" />
+		</p:tab>
+		<p:tab id="tab4" title="Empresas">
+			<ui:include src="vistas/empresas.xhtml" /> 
+		</p:tab>
+		<p:tab id="tab5" title="Catalogos">
+			<ui:include src="vistas/catalogos.xhtml" />  
+		</p:tab>
+	</p:tabView>
+</h:body>
+</html>

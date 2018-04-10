@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+	<h:form>
+	<h:body>
+		<p:dialog id="dialogAgregarOperacion" header="Nueva Cotizacion" widgetVar="modalCapturaCotizacion" minHeight="50" resizable="false" modal="true" >
+			
+			<p:panelGrid columns="2" style="border: none;" id="actualizarMontos">
+				
+				<p:outputLabel for="clienteModalCotizaciones" value="Cliente" />
+				<p:selectOneMenu id="clienteModalCotizaciones" value="#{cotizacionBean.cotizacion.idCliente}"> 
+					<f:selectItem itemLabel="Seleccionar.."/> 
+					<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}"/> 
+					 <f:ajax listener="#{cotizacionBean.actualizarEmpresas}" render="empresaModalCotizaciones actualizarMontos" />
+				</p:selectOneMenu>	
+				 
+				<p:outputLabel for="empresaModalCotizaciones" value="Empresas" id="empresasModalCotizacion"/>
+				<p:selectOneMenu id="empresaModalCotizaciones" value="#{cotizacionBean.cotizacion.idEmpresa}"> 
+					<f:selectItems value="#{cotizacionBean.listaEmpresas}" var="empresa" itemLabel="#{empresa.nombre}" itemValue="#{empresa.idEmpresa}" />
+				</p:selectOneMenu>	
+				
+				<p:outputLabel value="Porcentaje: " />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.porcentaje}" />
+				
+				<p:outputLabel for="cantidadCotizacion" value="Cantidad: " />
+				<p:inputNumber id="cantidadCotizacion" value="#{cotizacionBean.cotizacion.cantidad}" required="true">
+					<f:ajax render="actualizarMontos" />
+				</p:inputNumber>  
+				
+				<p:outputLabel for="tcCotizacion" value="TC: " />
+				<p:inputNumber id="tcCotizacion" value="#{cotizacionBean.cotizacion.tc}" required="true" decimalPlaces="4" >
+					<f:ajax render="actualizarMontos" />
+				</p:inputNumber>  
+				
+				<p:outputLabel value="Total pesos: " />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.totalPesos}"/>
+				
+				<p:outputLabel value="Comision: " />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.comision}"/>
+				
+				<p:outputLabel for="comisionExtraCotizacion" value="Comision Extra: " />
+				<p:inputNumber id="comisionExtraCotizacion" value="#{cotizacionBean.cotizacion.comisionExtra}" >
+					<f:ajax render="actualizarMontos" />
+				</p:inputNumber> 
+				
+				<p:outputLabel value="Total Comision Extra: " />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.totalComisionExtra}" />
+				
+				<p:outputLabel value="Gran total: " />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.granTotal}" />
+
+				<p:outputLabel  value="TC Ponderado: " />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.tcPonderado}" />
+				
+				<p:commandButton value="Grabar" action="#{cotizacionBean.agregar}" onclick="modalCapturaCotizacion.hide()" validateClient="true" tabindex="2"/>
+				<p:commandButton value="Cancelar" onclick="modalCapturaCotizacion.hide()" action="#{cotizacionBean.cancelarAgregar}"  immediate="true"/> 
+			</p:panelGrid>
+		</p:dialog>
+	</h:body>
+	</h:form>
+</html>

@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+	<h:form>
+		<h:body>
+			<p:dialog id="dialogAgregarCatalogo" header="Nuevo Catalogo" widgetVar="modalCapturaCatalogo" minHeight="50" resizable="false" modal="true" >
+				
+				<p:panelGrid columns="2" style="border: none;">
+				
+					<p:outputLabel for="conceptoModalCatalogo" value="Concepto:" />
+					<p:inputText id="conceptoModalCatalogo"  value="#{catalogoBean.catalogo.concepto}" required="true"/> 
+	
+					<p:outputLabel for="clasificacionCatalogo" value="Clasificacion" />
+					<p:selectOneRadio id="clasificacionCatalogo" value="#{catalogoBean.catalogo.tipoClasificacion}" required="true">
+						<f:selectItem itemLabel="Producto" itemValue="1" />
+						<f:selectItem itemLabel="Cliente" itemValue="2" />
+					</p:selectOneRadio>
+					
+					<p:outputLabel for="empresaCatalogo" value="Empresa:" />
+					<p:inputText id="empresaCatalogo"  value="#{catalogoBean.catalogo.empresa}" required="true"/>
+					
+					<p:outputLabel for="porcentajeCatalogo" value="Porcentaje: " />
+					<p:inputNumber id="porcentajeCatalogo" value="#{catalogoBean.catalogo.porcentaje}" required="true"/> 
+					
+					<p:commandButton value="Grabar" action="#{catalogoBean.agregar}" onclick="modalCapturaCatalogo.hide()" tabindex="5"/>
+					<p:commandButton value="Cancelar" onclick="modalCapturaCatalogo.hide()" immediate="true"/>
+				</p:panelGrid>
+			</p:dialog>
+		</h:body>
+	</h:form>
+</html>

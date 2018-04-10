@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+	<h:form>
+		<h:body>
+			
+			<p:dialog id="dialogAgregarEntrada" header="Nueva Entrada-Salida" widgetVar="modalCapturaEntrada" minHeight="50" resizable="false" modal="true" >
+				
+				<p:panelGrid id="panelEditarEntrada" columns="2" style="border: none;">
+				
+					<p:outputLabel for="conceptoModalEntrada" value="Concepto:" />
+					<p:inputText id="conceptoModalEntrada"  value="#{entradasSalidasBean.entradaSalida.concepto}" required="true"/> 
+					
+					<p:outputLabel for="clienteModalEntrada" value="Cliente" />
+					<p:selectOneMenu id="clienteModalEntrada" value="#{entradasSalidasBean.entradaSalida.idCliente}" required="true">
+						<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+					</p:selectOneMenu>	
+	
+					<p:outputLabel for="montoModalEntrada" value="Monto" />
+					<p:inputNumber id="montoModalEntrada" value="#{entradasSalidasBean.entradaSalida.monto}" required="true"/> 
+					
+					<p:outputLabel for="tipoEntrada" value="Tipo operacion" />
+					<p:selectOneRadio id="tipoEntrada" value="#{entradasSalidasBean.entradaSalida.tipoOperacion}" required="true">
+						<f:selectItem itemLabel="Entrada" itemValue="1" />
+						<f:selectItem itemLabel="Salida" itemValue="2" />
+					</p:selectOneRadio>
+					
+					<p:commandButton value="Grabar" action="#{entradasSalidasBean.agregar}" onclick="modalCapturaEntrada.hide()" tabindex="1"/>
+					<p:commandButton value="Cancelar" onclick="modalCapturaEntrada.hide()" immediate="true"/>
+				</p:panelGrid>
+			</p:dialog>
+		</h:body>
+	</h:form>
+</html>
