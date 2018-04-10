@@ -20,8 +20,8 @@ public class DaoConfig {
 		try {
 			dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 			dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
-			dataSource.setUsername("ADMINISTRADOR_JT");
-			dataSource.setPassword("ADMINISTRADOR_JT");
+			dataSource.setUsername("administrador_jt");
+			dataSource.setPassword("administrador_jt");
 		} catch (Exception e) {
 			System.out.println("Error => " + e.getMessage());
 			e.printStackTrace();
@@ -46,7 +46,7 @@ public class DaoConfig {
 		try {
 			simpleJdbcCall = new SimpleJdbcCall(dataSourceJNDI());
 		} catch (Exception e) {
-			System.out.println("Descripción => " + e.getMessage());
+			System.out.println("DescripciÃ³n => " + e.getMessage());
 			e.printStackTrace();
 		}
 		return simpleJdbcCall;
