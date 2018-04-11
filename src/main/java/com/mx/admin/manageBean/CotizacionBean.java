@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIOutput;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,7 +30,9 @@ import com.mx.admin.viewBean.CotizacionView;
 @ManagedBean(name = "cotizacionBean")
 @SessionScoped
 public class CotizacionBean implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(CotizacionBean.class);
 
 	private Date fechaInicioB;
 	private Date fechaFinB;
@@ -59,22 +62,22 @@ public class CotizacionBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		System.out.println("Iniciando consulta inicial cotizaciones controller");
+		LOG.info("Iniciando consulta inicial cotizaciones controller");
 		listaCotizaciones = cotizacionDao.consulta();
 		cotizacionView = new CotizacionView();
 	}
 
 	public void buscar() {
-		System.out.println("Iniciando busqueda cotizaciones controller");
+		LOG.info("Iniciando busqueda cotizaciones controller");
 		listaCotizaciones = cotizacionDao.buscar(clienteB, empresaB,fechaInicioB, fechaFinB);
-		System.out.println("Fin busqueda cotizaciones controller");
+		LOG.info("Fin busqueda cotizaciones controller");
 	}
 
 	public void agregar() {
-		System.out.println("Agregando nueva cotizacion controller -> " );
+		LOG.info("Agregando nueva cotizacion controller -> " );
 		boolean resultado = cotizacionDao.agregar(cotizacionView);
 		
-		System.out.println("Resultado agregar nueva cotizacion controller -> " + resultado);
+		LOG.info("Resultado agregar nueva cotizacion controller -> " + resultado);
 		
 		cotizacionView = new CotizacionView();
 		listaCotizaciones = cotizacionDao.consulta();
@@ -82,30 +85,30 @@ public class CotizacionBean implements Serializable {
 	}
 	
 	public void buscarTodo() {
-		System.out.println("Buscando todas las cotizaciones controller");
+		LOG.info("Buscando todas las cotizaciones controller");
 		listaCotizaciones = cotizacionDao.consulta();
 	}
 	
 	public void borrar(Cotizacion cotizacionB) {
-		System.out.println("Borrando cotizacion controller -> " + cotizacionB.toString());
+		LOG.info("Borrando cotizacion controller -> " + cotizacionB.toString());
 		
 		boolean resultado = cotizacionDao.borrar(cotizacionB);
 		
-		System.out.println("Resultado borrar cotizacion controller -> " + resultado);
+		LOG.info("Resultado borrar cotizacion controller -> " + resultado);
 		
 		cotizacionView = new CotizacionView();
 		listaCotizaciones = cotizacionDao.consulta();
 	}
 
 	public void cancelarEdicion(RowEditEvent event) {
-    	System.out.println("Cancelar Editar fila");
+    	LOG.info("Cancelar Editar fila");
     }
 
 	public void editar(RowEditEvent event) {
-		System.out.println("Editar cotizacion controller -> ");
+		LOG.info("Editar cotizacion controller -> ");
 		cotizacionEditar =  (Cotizacion) event.getObject();
 		
-		System.out.println("Elemento a editar cotizacion controller -> " + cotizacionEditar.toString());
+		LOG.info("Elemento a editar cotizacion controller -> " + cotizacionEditar.toString());
 		
 		Cliente cliente = clienteDao.obtenerCliente(cotizacionEditar.getIdCliente());
 		
@@ -119,7 +122,7 @@ public class CotizacionBean implements Serializable {
 		
 		boolean resultado = cotizacionDao.editar(cotizacionEditar);
 		
-		System.out.println("Resultado editar cotizacion controller -> " + resultado);
+		LOG.info("Resultado editar cotizacion controller -> " + resultado);
 		
 		cotizacionEditar = new Cotizacion();
 		listaCotizaciones = cotizacionDao.consulta();
