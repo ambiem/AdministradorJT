@@ -8,10 +8,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 @ManagedBean(name = "appUrlStore")
 @ApplicationScoped
 public class AppUrlStore implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(AppUrlStore.class);
 
 	private String baseUrl = null;
 	private String entradasSalidasUrl = null;
