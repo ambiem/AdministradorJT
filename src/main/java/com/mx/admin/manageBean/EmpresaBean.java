@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.mx.admin.util.CommonUtils;
 public class EmpresaBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(EmpresaBean.class);
 
 	private String nombreB;
 	private Integer clienteB;
@@ -40,28 +42,28 @@ public class EmpresaBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		System.out.println("Iniciando consulta inicial empresas controller");
+		LOG.info("Iniciando consulta inicial empresas controller");
 		listaEmpresas = empresaDao.consulta();
 		empresa = new Empresa();
 	}
 
 	public void buscar() {
-		System.out.println("Iniciando busqueda empresas controller");
+		LOG.info("Iniciando busqueda empresas controller");
 		listaEmpresas = empresaDao.buscar(nombreB, clienteB);
-		System.out.println("Fin busqueda empresas controller");
+		LOG.info("Fin busqueda empresas controller");
 	}
 
 	public void buscarTodo() {
-		System.out.println("Buscando todas los empresas controller");
+		LOG.info("Buscando todas los empresas controller");
 		listaEmpresas = empresaDao.consulta();
 	}
 
 	public void agregar() {
-		System.out.println("Agregando nuevo empresa controller -> " );
+		LOG.info("Agregando nuevo empresa controller -> " );
 		
 		boolean resultado = empresaDao.agregar(empresa);
 		
-		System.out.println("Resultado agregar nuevo empresa controller -> " + resultado);
+		LOG.info("Resultado agregar nuevo empresa controller -> " + resultado);
 		
 		empresa = new Empresa();
 		listaEmpresas = empresaDao.consulta();
@@ -69,31 +71,31 @@ public class EmpresaBean implements Serializable {
 	}
 
 	public void borrar(Empresa empresa) {
-		System.out.println("Borrando empresa controller -> " + empresa.toString());
+		LOG.info("Borrando empresa controller -> " + empresa.toString());
 		
 		boolean resultado = empresaDao.borrar(empresa);
 		
-		System.out.println("Resultado borrar empresa controller -> " + resultado);
+		LOG.info("Resultado borrar empresa controller -> " + resultado);
 		
 		empresa = new Empresa();
 		listaEmpresas = empresaDao.consulta();
 	}
 
 	public void editar(RowEditEvent event) {
-		System.out.println("Editar empresa controller -> ");
+		LOG.info("Editar empresa controller -> ");
 		empresaEditar = (Empresa) event.getObject();
 		
-		System.out.println("Elemento a editar Empresa controller -> " + empresaEditar.toString());
+		LOG.info("Elemento a editar Empresa controller -> " + empresaEditar.toString());
 		boolean resultado = empresaDao.editar(empresaEditar);
 		
-		System.out.println("Resultado editar empresa controller -> " + resultado);
+		LOG.info("Resultado editar empresa controller -> " + resultado);
 		
 		empresaEditar = new Empresa();
 		listaEmpresas = empresaDao.consulta();
 	}
 	
 	public void cancelarEdicion(RowEditEvent event) {
-    	System.out.println("Cancelar Editar fila");
+    	LOG.info("Cancelar Editar fila");
     }
 
 	public String getNombreB() {
