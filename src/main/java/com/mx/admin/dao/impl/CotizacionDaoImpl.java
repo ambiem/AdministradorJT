@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -23,6 +24,8 @@ public class CotizacionDaoImpl implements CotizacionDao{
 	private static final String CONSULTA_BUSQUEDA = "SELECT COTIZACION.ID_COTIZACION, COTIZACION.CANTIDAD, COTIZACION.TC, COTIZACION.PORCENTAJE, COTIZACION.TOTALPESOS, COTIZACION.COMISION, COTIZACION.COMISIONEXTRA, COTIZACION.TOTAL, COTIZACION.TCPONDERADO, COTIZACION.FECHA, COTIZACION.ID_CLIENTE, COTIZACION.ID_EMPRESA, COTIZACION.TOTALCOMISIONEXTRA, CLIENTE.NOMBRE, EMPRESA.NOMBRE FROM COTIZACION, EMPRESA, CLIENTE WHERE (COTIZACION.ID_EMPRESA = :empresa OR COTIZACION.ID_CLIENTE = :cliente OR COTIZACION.FECHA BETWEEN :fechaInicio AND :fechaFin) AND COTIZACION.ID_CLIENTE = CLIENTE.ID_CLIENTE AND COTIZACION.ID_EMPRESA = EMPRESA.ID_EMPRESA ORDER BY COTIZACION.ID_COTIZACION DESC";
 	private static final String CONSULTA_DELETE = "DELETE FROM COTIZACION WHERE ID_COTIZACION = :idCotizacion";
 	
+	private static final Logger LOG = Logger.getLogger(CotizacionDaoImpl.class);
+	
 	private DaoConfig daoConfig = new DaoConfig();
 	
 	@Autowired
@@ -31,7 +34,7 @@ public class CotizacionDaoImpl implements CotizacionDao{
 	@Override
 	public List<Cotizacion> buscar(Integer clienteB, Integer empresaB, Date fechaInicioB, Date fechaFinB) {
 		List<Cotizacion> listaCotizaciones = new ArrayList<Cotizacion>();
-		System.out.println("Busqueda parametros cotizacion dao -> clienteB: " + clienteB + " empresa: " + empresaB + " fechaInicio: "+ fechaInicioB + " fechaFin: " + fechaFinB);
+		LOG.info("Busqueda parametros cotizacion dao -> clienteB: " + clienteB + " empresa: " + empresaB + " fechaInicio: "+ fechaInicioB + " fechaFin: " + fechaFinB);
 		
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();
@@ -43,21 +46,21 @@ public class CotizacionDaoImpl implements CotizacionDao{
 			listaCotizaciones = namedParameterJdbcTemplate.query(CONSULTA_BUSQUEDA, namedParameters, new CotizacionMapper());
 			
 		}catch(Exception e) {
-			System.out.println("Fallo con busqueda parametros cotizacion dao -> clienteB: " + clienteB + " empresa: " + empresaB + " fechaInicio: "+ fechaInicioB + " fechaFin: " + fechaFinB );
+			LOG.info("Fallo con busqueda parametros cotizacion dao -> clienteB: " + clienteB + " empresa: " + empresaB + " fechaInicio: "+ fechaInicioB + " fechaFin: " + fechaFinB );
 			e.printStackTrace();
 			return listaCotizaciones;
 		}
 
 		if(listaCotizaciones != null){
-			System.out.println("Exito con busqueda parametros cotizacion dao -> clienteB: " + clienteB + " empresa: " + empresaB + " fechaInicio: "+ fechaInicioB + " fechaFin: " + fechaFinB);
-			System.out.println(" #Elementos " + listaCotizaciones.size());
+			LOG.info("Exito con busqueda parametros cotizacion dao -> clienteB: " + clienteB + " empresa: " + empresaB + " fechaInicio: "+ fechaInicioB + " fechaFin: " + fechaFinB);
+			LOG.info(" #Elementos " + listaCotizaciones.size());
 		}
 		return listaCotizaciones;
 	}
 
 	@Override
 	public boolean agregar(CotizacionView cotizacion) {
-		System.out.println("Agregar nueva cotizacion dao -> " + cotizacion.toString());
+		LOG.info("Agregar nueva cotizacion dao -> " + cotizacion.toString());
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();		
 			namedParameters.put("cantidad",  cotizacion.getCantidad());
@@ -75,51 +78,51 @@ public class CotizacionDaoImpl implements CotizacionDao{
 			
 			namedParameterJdbcTemplate.update(CONSULTA_INSERT, namedParameters);
 		}catch(Exception e) {
-			System.out.println("Fallo al agregar nueva cotizacion dao -> " + cotizacion.toString());
+			LOG.info("Fallo al agregar nueva cotizacion dao -> " + cotizacion.toString());
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al agregar nueva cotizacion dao -> " + cotizacion.toString());
+		LOG.info("Exito al agregar nueva cotizacion dao -> " + cotizacion.toString());
 		return true;
 	}
 
 	@Override
 	public List<Cotizacion> consulta() {
-		System.out.println("Consulta todas las cotizaciones dao -> ");
+		LOG.info("Consulta todas las cotizaciones dao -> ");
 		List<Cotizacion> listaCotizaciones = new ArrayList<Cotizacion>();
 		try {
 			listaCotizaciones = namedParameterJdbcTemplate.query(CONSULTA_SELECT_TODO, new CotizacionMapper());
 		}catch(Exception e) {
-			System.out.println("Fallo al consultar todas las cotizaciones dao -> ");
+			LOG.info("Fallo al consultar todas las cotizaciones dao -> ");
 			e.printStackTrace();
 			return listaCotizaciones;
 		}
 		if(listaCotizaciones != null)
-		System.out.println("Exito al consultar todas las cotizaciones dao -> #Elmentos" + listaCotizaciones.size());
+		LOG.info("Exito al consultar todas las cotizaciones dao -> #Elmentos" + listaCotizaciones.size());
 		
 		return listaCotizaciones;
 	}
 
 	@Override
 	public boolean borrar(Cotizacion cotizacionB) {
-		System.out.println("Borrar cotizacion dao -> " + cotizacionB.toString());
+		LOG.info("Borrar cotizacion dao -> " + cotizacionB.toString());
 		
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();
 			namedParameters.put("idCotizacion", cotizacionB.getIdCotizacion());
 			namedParameterJdbcTemplate.update(CONSULTA_DELETE, namedParameters);
 		} catch (Exception e) {
-			System.out.println("Fallo al borrar cotizacion dao -> " + cotizacionB.toString());
+			LOG.info("Fallo al borrar cotizacion dao -> " + cotizacionB.toString());
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al borrar cotizacion dao -> " + cotizacionB.toString());
+		LOG.info("Exito al borrar cotizacion dao -> " + cotizacionB.toString());
 		return true;
 	}
 
 	@Override
 	public boolean editar(Cotizacion cotizacion) {
-		System.out.println("Editar cotizacion dao -> " + cotizacion.toString());
+		LOG.info("Editar cotizacion dao -> " + cotizacion.toString());
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();		
 			namedParameters.put("cantidad",  cotizacion.getCantidad());
@@ -139,11 +142,11 @@ public class CotizacionDaoImpl implements CotizacionDao{
 			
 			namedParameterJdbcTemplate.update(CONSULTA_UPDATE, namedParameters);
 		}catch(Exception e) {
-			System.out.println("Fallo al editar cotizacion dao -> " + cotizacion.toString());
+			LOG.info("Fallo al editar cotizacion dao -> " + cotizacion.toString());
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al editar cotizacion dao -> " + cotizacion.toString());
+		LOG.info("Exito al editar cotizacion dao -> " + cotizacion.toString());
 		return true;
 	}
 
