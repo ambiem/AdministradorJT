@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +20,9 @@ import com.mx.admin.util.CommonUtils;
 @ManagedBean(name = "catalogoBean")
 @SessionScoped
 public class CatalogoBean implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(CatalogoBean.class);
 
 	private String conceptoB;
 	private Integer clasificacionB;
@@ -40,59 +43,59 @@ public class CatalogoBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		System.out.println("Iniciando consulta inicial catalogos controller");
+		LOG.info("Iniciando consulta inicial catalogos controller");
 		listaCatalogo = catalogoDao.consulta();
 		catalogo = new Catalogo();
 	}
 
 	public void buscar() {
-		System.out.println("Iniciando busqueda catalogos controller");
+		LOG.info("Iniciando busqueda catalogos controller");
 		listaCatalogo = catalogoDao.buscar(conceptoB, clasificacionB, empresaB);
-		System.out.println("Fin busqueda catalogos controller");
+		LOG.info("Fin busqueda catalogos controller");
 	}
 
 	public void buscarTodo() {
-		System.out.println("Buscando todas los catalogos controller");
+		LOG.info("Buscando todas los catalogos controller");
 		listaCatalogo = catalogoDao.consulta();
 	}
 
 	public void agregar() {
-		System.out.println("Agregando nuevo catalogo controller -> " );
+		LOG.info("Agregando nuevo catalogo controller -> " );
 		
 		boolean resultado = catalogoDao.agregar(catalogo);
 		
-		System.out.println("Resultado agregar nuevo catalogo controller -> " + resultado);
+		LOG.info("Resultado agregar nuevo catalogo controller -> " + resultado);
 		
 		catalogo = new Catalogo();
 		listaCatalogo = catalogoDao.consulta();
 	}
 
 	public void borrar(Catalogo catalogoB) {
-		System.out.println("Borrando catalogo controller -> " + catalogoB.toString());
+		LOG.info("Borrando catalogo controller -> " + catalogoB.toString());
 		
 		boolean resultado = catalogoDao.borrar(catalogoB);
 		
-		System.out.println("Resultado borrar catalogo controller -> " + resultado);
+		LOG.info("Resultado borrar catalogo controller -> " + resultado);
 		
 		catalogo = new Catalogo();
 		listaCatalogo = catalogoDao.consulta();
 	}
 
 	public void editar(RowEditEvent event) {
-		System.out.println("Editar catalogo controller -> ");
+		LOG.info("Editar catalogo controller -> ");
 		catalogoEditar = (Catalogo) event.getObject();
 		
-		System.out.println("Elemento a editar catalogo controller -> " + catalogoEditar.toString());
+		LOG.info("Elemento a editar catalogo controller -> " + catalogoEditar.toString());
 		boolean resultado = catalogoDao.editar(catalogoEditar);
 		
-		System.out.println("Resultado editar catalogo controller -> " + resultado);
+		LOG.info("Resultado editar catalogo controller -> " + resultado);
 		
 		catalogoEditar = new Catalogo();
 		listaCatalogo = catalogoDao.consulta();
 	}
 	
 	public void cancelarEdicion(RowEditEvent event) {
-    	System.out.println("Cancelar Editar fila");
+    	LOG.info("Cancelar Editar fila");
     }
 
 	public String getConceptoB() {
