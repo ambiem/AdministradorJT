@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +20,10 @@ import com.mx.admin.util.CommonUtils;
 @ManagedBean(name = "entradasSalidasBean")
 @SessionScoped
 public class EntradasSalidasBean implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(EntradasSalidasBean.class);
+	
 	private List<EntradaSalida> listaEntradaSalida;
 	private EntradaSalida entradaSalida = new EntradaSalida();
 	private EntradaSalida entradaSalidaEditar = new EntradaSalida();
@@ -41,30 +45,30 @@ public class EntradasSalidasBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		System.out.println("Iniciando consulta inicial operaciones controller");
+		LOG.info("Iniciando consulta inicial operaciones controller");
 		listaEntradaSalida = entradaSalidaDao.consulta();
 		entradaSalida = new EntradaSalida();
 		entradaSalidaEditar = new EntradaSalida();
 	}
 
 	public void agregar() {
-		System.out.println("Agregando nueva Operacion controller");
+		LOG.info("Agregando nueva Operacion controller");
 		boolean resultado = entradaSalidaDao.agregar(entradaSalida);
 		
-		System.out.println("Resultado agregar Operacion -> " + resultado);
+		LOG.info("Resultado agregar Operacion -> " + resultado);
 		
 		entradaSalida = new EntradaSalida();
 		listaEntradaSalida = entradaSalidaDao.consulta();
 	}
 	
 	public void editar(RowEditEvent event) {
-		System.out.println("Editando operacion controller");
+		LOG.info("Editando operacion controller");
 		entradaSalidaEditar = (EntradaSalida) event.getObject();
 
-		System.out.println("Elemento a editar controller -> " + entradaSalidaEditar.toString());
+		LOG.info("Elemento a editar controller -> " + entradaSalidaEditar.toString());
 		
 		boolean resultado = entradaSalidaDao.editar(entradaSalidaEditar);
-		System.out.println("Resultado editar operacion controller -> " + resultado);
+		LOG.info("Resultado editar operacion controller -> " + resultado);
 		
 		entradaSalidaEditar = new EntradaSalida();
 		listaEntradaSalida = entradaSalidaDao.consulta();
@@ -72,27 +76,27 @@ public class EntradasSalidasBean implements Serializable {
 	}
 	
 	public void cancelarEdicion(RowEditEvent event) {
-    	System.out.println("Cancelar Editar fila");
+    	LOG.info("Cancelar Editar fila");
     }
 	
 	public void borrar(EntradaSalida entradaSalidaB) {
-		System.out.println("Borrando operacion controller -> " + entradaSalidaB.toString());
+		LOG.info("Borrando operacion controller -> " + entradaSalidaB.toString());
 		
 		boolean resultado = entradaSalidaDao.borrar(entradaSalidaB);
 		
-		System.out.println("Resultado borrar operacion controller -> " + resultado);
+		LOG.info("Resultado borrar operacion controller -> " + resultado);
 		entradaSalidaEditar = new EntradaSalida();
 		listaEntradaSalida = entradaSalidaDao.consulta();
 	}
 
 	public void buscar() {
-		System.out.println("Busqueda operacion por parametros controller");
+		LOG.info("Busqueda operacion por parametros controller");
 		listaEntradaSalida = entradaSalidaDao.buscar(conceptoB, tipoMovimientoB, fechaInicioB, fechaFinB, clienteB);
-		System.out.println("Fin Busqueda operacion por parametros controller");
+		LOG.info("Fin Busqueda operacion por parametros controller");
 	}
 	
 	public void buscarTodo() {
-		System.out.println("Buscando todas las operaciones controller");
+		LOG.info("Buscando todas las operaciones controller");
 		listaEntradaSalida = entradaSalidaDao.consulta();
 	}
 	
