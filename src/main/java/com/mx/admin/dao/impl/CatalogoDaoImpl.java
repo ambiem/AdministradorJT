@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -22,6 +23,8 @@ public class CatalogoDaoImpl implements CatalogoDao{
 	private static final String CONSULTA_BUSQUEDA = "SELECT * FROM CATALOGO WHERE CONCEPTO LIKE :concepto OR ID_CLASIFICACION = :tipoClasificacion OR EMPRESA LIKE :empresa ORDER BY ID_CATALOGO DESC";
 	private static final String CONSULTA_DELETE = "DELETE FROM CATALOGO WHERE ID_CATALOGO = :idCatalogo";
 	
+	private static final Logger LOG = Logger.getLogger(CatalogoDaoImpl.class);
+	
 	private DaoConfig daoConfig = new DaoConfig();
 	
 	@Autowired
@@ -30,7 +33,7 @@ public class CatalogoDaoImpl implements CatalogoDao{
 	@Override
 	public List<Catalogo> buscar(String conceptoB, Integer clasificacionB, String empresaB) {
 		List<Catalogo> catalogos = new ArrayList<Catalogo>();
-		System.out.println("Busqueda por parametros catalogo dao -> concepto: "+ conceptoB + " clasificacion: " + clasificacionB + " empresa: " + empresaB);
+		LOG.info("Busqueda por parametros catalogo dao -> concepto: "+ conceptoB + " clasificacion: " + clasificacionB + " empresa: " + empresaB);
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();
 			namedParameters.put("concepto", conceptoB);
@@ -40,13 +43,13 @@ public class CatalogoDaoImpl implements CatalogoDao{
 			catalogos = namedParameterJdbcTemplate.query(CONSULTA_BUSQUEDA, namedParameters, new CatalogoMapper());
 			
 		}catch(Exception e) {
-			System.out.println("Fallo busqueda por parametros catalogo dao -> concepto: "+ conceptoB + " clasificacion: " + clasificacionB + " empresa: " + empresaB);
+			LOG.info("Fallo busqueda por parametros catalogo dao -> concepto: "+ conceptoB + " clasificacion: " + clasificacionB + " empresa: " + empresaB);
 			e.printStackTrace();
 			return catalogos;
 		}
 		if(catalogos != null){
-			System.out.println("Exito busqueda por parametros catalogo dao -> concepto: "+ conceptoB + " clasificacion: " + clasificacionB + " empresa: " + empresaB);
-			System.out.println(" #elementos -> " + catalogos.size());
+			LOG.info("Exito busqueda por parametros catalogo dao -> concepto: "+ conceptoB + " clasificacion: " + clasificacionB + " empresa: " + empresaB);
+			LOG.info(" #elementos -> " + catalogos.size());
 		}
 		
 		return catalogos;
@@ -54,7 +57,7 @@ public class CatalogoDaoImpl implements CatalogoDao{
 
 	@Override
 	public boolean agregar(Catalogo catalogo) {
-		System.out.println("Agregar nuevo catalogo dao -> " + catalogo.toString());
+		LOG.info("Agregar nuevo catalogo dao -> " + catalogo.toString());
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();		
 			namedParameters.put("concepto",  catalogo.getConcepto());
@@ -65,49 +68,49 @@ public class CatalogoDaoImpl implements CatalogoDao{
 			
 			namedParameterJdbcTemplate.update(CONSULTA_INSERT, namedParameters);
 		}catch(Exception e) {
-			System.out.println("Fallo al agregar nuevo catalogo dao -> " + catalogo.toString());
+			LOG.info("Fallo al agregar nuevo catalogo dao -> " + catalogo.toString());
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al agregar nuevo catalogo dao -> " + catalogo.toString());
+		LOG.info("Exito al agregar nuevo catalogo dao -> " + catalogo.toString());
 		return true;
 	}
 
 	@Override
 	public List<Catalogo> consulta() {
-		System.out.println("Consulta todos los catalogos dao");
+		LOG.info("Consulta todos los catalogos dao");
 		List<Catalogo> catalogos = new ArrayList<Catalogo>();
 		try {
 			catalogos = namedParameterJdbcTemplate.query(CONSULTA_SELECT_TODO, new CatalogoMapper());
 		}catch(Exception e) {
-			System.out.println("Fallo al consultar todos los catalogos dao");
+			LOG.info("Fallo al consultar todos los catalogos dao");
 			e.printStackTrace();
 			return catalogos;
 		}
 		if(catalogos != null ){
-			System.out.println("Exito al consultar todos los catalogos dao #elementos -> " + catalogos.size());
+			LOG.info("Exito al consultar todos los catalogos dao #elementos -> " + catalogos.size());
 		}
 		return catalogos;
 	}
 
 	@Override
 	public boolean borrar(Catalogo catalogoB) {
-		System.out.println("Borrar catalogo dao -> " + catalogoB.toString());
+		LOG.info("Borrar catalogo dao -> " + catalogoB.toString());
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();
 			namedParameters.put("idCatalogo", catalogoB.getIdCatalogo());
 			namedParameterJdbcTemplate.update(CONSULTA_DELETE, namedParameters);
 		} catch (Exception e) {
-			System.out.println("Fallo al borrar catalogo dao -> " + catalogoB.toString());
+			LOG.info("Fallo al borrar catalogo dao -> " + catalogoB.toString());
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al borrar catalogo dao -> " + catalogoB.toString());
+		LOG.info("Exito al borrar catalogo dao -> " + catalogoB.toString());
 		return true;
 	}
 
 	public boolean editar(Catalogo catalogoEditar) {
-		System.out.println("Editar catalogo dao -> " + catalogoEditar.toString());
+		LOG.info("Editar catalogo dao -> " + catalogoEditar.toString());
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();		
 			namedParameters.put("idCatalogo",  catalogoEditar.getIdCatalogo());
@@ -119,11 +122,11 @@ public class CatalogoDaoImpl implements CatalogoDao{
 			
 			namedParameterJdbcTemplate.update(CONSULTA_UPDATE, namedParameters);
 		}catch(Exception e) {
-			System.out.println("Fallo al editar catalogo dao -> " + catalogoEditar.toString());
+			LOG.info("Fallo al editar catalogo dao -> " + catalogoEditar.toString());
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al editar catalogo dao -> " + catalogoEditar.toString());
+		LOG.info("Exito al editar catalogo dao -> " + catalogoEditar.toString());
 		return true;
 	}
 	
