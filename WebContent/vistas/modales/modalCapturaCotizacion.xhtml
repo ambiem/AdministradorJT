@@ -25,7 +25,9 @@
 				</p:selectOneMenu>	
 				
 				<p:outputLabel value="Porcentaje: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.porcentaje}" />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.porcentaje}" >
+					<f:convertNumber pattern="¤#,##0.00" currencySymbol="%"/>
+				</p:outputLabel>
 				
 				<p:outputLabel for="cantidadCotizacion" value="Cantidad: " />
 				<p:inputNumber id="cantidadCotizacion" value="#{cotizacionBean.cotizacion.cantidad}" required="true">
@@ -38,10 +40,14 @@
 				</p:inputNumber>  
 				
 				<p:outputLabel value="Total pesos: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.totalPesos}"/>
+				<p:outputLabel value="#{cotizacionBean.cotizacion.totalPesos}">
+					<f:convertNumber pattern="¤#,##0.00" />
+				</p:outputLabel>
 				
 				<p:outputLabel value="Comision: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.comision}"/>
+				<p:outputLabel value="#{cotizacionBean.cotizacion.comision}">
+					<f:convertNumber pattern="¤#,##0.00" />
+				</p:outputLabel>
 				
 				<p:outputLabel for="comisionExtraCotizacion" value="Comision Extra: " />
 				<p:inputNumber id="comisionExtraCotizacion" value="#{cotizacionBean.cotizacion.comisionExtra}" >
@@ -49,13 +55,19 @@
 				</p:inputNumber> 
 				
 				<p:outputLabel value="Total Comision Extra: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.totalComisionExtra}" />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.totalComisionExtra}" >
+					<f:convertNumber pattern="¤#,##0.00" />
+				</p:outputLabel>
 				
 				<p:outputLabel value="Gran total: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.granTotal}" />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.granTotal}" >
+					<f:convertNumber pattern="¤#,##0.00" />
+				</p:outputLabel>
 
 				<p:outputLabel  value="TC Ponderado: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.tcPonderado}" />
+				<p:outputLabel value="#{cotizacionBean.cotizacion.tcPonderado}" >
+					<f:convertNumber pattern="¤#,##0.00" />
+				</p:outputLabel>
 				
 				<p:commandButton value="Grabar" action="#{cotizacionBean.agregar}" onclick="modalCapturaCotizacion.hide()" validateClient="true" tabindex="2"/>
 				<p:commandButton value="Cancelar" onclick="modalCapturaCotizacion.hide()" action="#{cotizacionBean.cancelarAgregar}"  immediate="true"/> 
