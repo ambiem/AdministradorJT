@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.SqlParameter;
@@ -31,6 +32,8 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 	private static final String CONSULTA_SELECT_TODO = "SELECT OPERACION.ID_OPERACION, OPERACION.CONCEPTO, OPERACION.MONTO, OPERACION.TIPO_OPERACION, OPERACION.FECHA, OPERACION.SALDO, OPERACION.ID_CLIENTE, CLIENTE.NOMBRE FROM OPERACION, CLIENTE WHERE OPERACION.ACTIVO = 1 AND CLIENTE.ID_CLIENTE = OPERACION.ID_CLIENTE ORDER BY ID_OPERACION DESC";
 	private static final String CONSULTA_BUSQUEDA = "SELECT OPERACION.ID_OPERACION, OPERACION.CONCEPTO, OPERACION.MONTO, OPERACION.TIPO_OPERACION, OPERACION.FECHA, OPERACION.SALDO, OPERACION.ID_CLIENTE, CLIENTE.NOMBRE FROM OPERACION, CLIENTE WHERE (OPERACION.CONCEPTO LIKE :concepto OR OPERACION.TIPO_OPERACION = :tipoOperacion OR OPERACION.FECHA BETWEEN :fechaInicio AND :fechaFin OR OPERACION.ID_CLIENTE =:idCliente) AND OPERACION.ACTIVO = 1 AND CLIENTE.ID_CLIENTE = OPERACION.ID_CLIENTE ORDER BY ID_OPERACION DESC";
 	private static final String CLIENTE_ID = "CLIENTE_V";
+	
+	private static final Logger LOG = Logger.getLogger(EntradaSalidaDaoImpl.class);
 
 	private DaoConfig daoConfig = new DaoConfig();
 	
@@ -46,7 +49,7 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 
 	@Override
 	public List<EntradaSalida> consulta() {
-		System.out.println("Consulta todas las operaciones dao -> ");
+		LOG.info("Consulta todas las operaciones dao -> ");
 		List<EntradaSalida> operaciones = new ArrayList<EntradaSalida>();
 		try {
 			operaciones = namedParameterJdbcTemplate.query(CONSULTA_SELECT_TODO, new EntradaSalidaMapper());
@@ -56,14 +59,14 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 		}
 		
 		if(operaciones != null)
-			System.out.println("Consulta todas las operaciones exitosa -> #Elementos " + operaciones.size());
+			LOG.info("Consulta todas las operaciones exitosa -> #Elementos " + operaciones.size());
 		
 		return operaciones;
 	}
 
 	@Override
 	public Boolean agregar(EntradaSalida operacion) {
-		System.out.println("Agregar nueva operacion dao -> " + operacion.toString());
+		LOG.info("Agregar nueva operacion dao -> " + operacion.toString());
 		try {
 			simpleJdbcCall.withSchemaName("administrador_jt").withCatalogName("INSERT_OPERACIONES_SALDOS").withProcedureName("actualizar_operacion_saldo").declareParameters(buildSqlParameters());
 			
@@ -77,18 +80,18 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 			simpleJdbcCall.execute(in);
 			
 		} catch (Exception e) {
-			System.out.println("Fallo al agregar nueva operacion dao -> ");
+			LOG.info("Fallo al agregar nueva operacion dao -> ");
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al agregar nueva operacion dao -> " + operacion.toString());
+		LOG.info("Exito al agregar nueva operacion dao -> " + operacion.toString());
 		return true;
 	}
 
 	@Override
 	public List<EntradaSalida> buscar(String conceptoB, Integer tipoMovimientoB, Date fechaInicioB, Date fechaFinB, Integer clienteB) {
 		List<EntradaSalida> operaciones = new ArrayList<EntradaSalida>();
-		System.out.println("Busqueda operacion dao -> concepto: " + conceptoB + " tipoMovimiento: " + tipoMovimientoB + " fechaInicio: " + fechaInicioB + " fechaFin: " + fechaFinB);
+		LOG.info("Busqueda operacion dao -> concepto: " + conceptoB + " tipoMovimiento: " + tipoMovimientoB + " fechaInicio: " + fechaInicioB + " fechaFin: " + fechaFinB);
 		
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();
@@ -101,18 +104,18 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 			operaciones = namedParameterJdbcTemplate.query(CONSULTA_BUSQUEDA,namedParameters, new EntradaSalidaMapper());
 			
 		} catch (Exception e) {
-			System.out.println("Fallo busqueda operaciones dao");
+			LOG.info("Fallo busqueda operaciones dao");
 			e.printStackTrace();
 			return operaciones;
 		}
 		
-		System.out.println("Resultado busqueda operacion dao exitoso #Elementos ->" + operaciones.size());
+		LOG.info("Resultado busqueda operacion dao exitoso #Elementos ->" + operaciones.size());
 		return operaciones;
 	}
 
 	@Override
 	public Boolean editar(EntradaSalida operacion) {
-		System.out.println("Editar operacion dao -> " + operacion.toString());
+		LOG.info("Editar operacion dao -> " + operacion.toString());
 		
 		try {
 			simpleJdbcCall.withSchemaName("administrador_jt").withCatalogName("INSERT_OPERACIONES_SALDOS").withProcedureName("actualizar_operacion_saldo").declareParameters(buildSqlParameters());
@@ -125,17 +128,17 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 					.addValue(FECHA_V, new Date());
 			simpleJdbcCall.execute(in);
 		} catch (Exception e) {
-			System.out.println("Fallo al editar operacion dao -> ");
+			LOG.info("Fallo al editar operacion dao -> ");
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Exito al editar operacion dao -> " + operacion.toString());
+		LOG.info("Exito al editar operacion dao -> " + operacion.toString());
 		return true;
 	}
 
 	@Override
 	public Boolean borrar(EntradaSalida operacion) {
-		System.out.println("Eliminando operacion dao -> " + operacion.toString());
+		LOG.info("Eliminando operacion dao -> " + operacion.toString());
 
 		try {
 			simpleJdbcCallDelete.withSchemaName("administrador_jt").withCatalogName("DELETE_OPERACIONES_SALDO").withProcedureName("ACTUALIZAR_SALDO_BORRAR").declareParameters(buildSqlParametersDelete());
@@ -147,12 +150,12 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 			simpleJdbcCallDelete.execute(in);
 			
 		} catch (Exception e) {
-			System.out.println("Fallo al eliminar operacion dao -> ");
+			LOG.info("Fallo al eliminar operacion dao -> ");
 			e.printStackTrace();
 			return false;
 		}
 		
-		System.out.println("Exito al eliminar operacion dao -> " + operacion.toString());
+		LOG.info("Exito al eliminar operacion dao -> " + operacion.toString());
 		return true;
 	}
 
