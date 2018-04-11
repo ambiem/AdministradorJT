@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,6 +21,7 @@ import com.mx.admin.util.CommonUtils;
 public class ClienteBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(ClienteBean.class);
 
 	private String conceptoB;
 	private String nombre;
@@ -39,59 +41,59 @@ public class ClienteBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		System.out.println("Iniciando consulta inicial clientes controller");
+		LOG.info("Iniciando consulta inicial clientes controller");
 		listaCliente = clienteDao.consulta();
 		cliente = new Cliente();
 	}
 
 	public void buscar() {
-		System.out.println("Iniciando busqueda clientes controller");
+		LOG.info("Iniciando busqueda clientes controller");
 		listaCliente = clienteDao.buscar(conceptoB, nombre);
-		System.out.println("Fin busqueda clientes controller");
+		LOG.info("Fin busqueda clientes controller");
 	}
 
 	public void buscarTodo() {
-		System.out.println("Buscando todas los clientes controller");
+		LOG.info("Buscando todas los clientes controller");
 		listaCliente = clienteDao.consulta();
 	}
 
 	public void agregar() {
-		System.out.println("Agregando nuevo cliente controller -> " );
+		LOG.info("Agregando nuevo cliente controller -> " );
 		
 		boolean resultado = clienteDao.agregar(cliente);
 		
-		System.out.println("Resultado agregar nuevo cliente controller -> " + resultado);
+		LOG.info("Resultado agregar nuevo cliente controller -> " + resultado);
 		
 		cliente = new Cliente();
 		listaCliente = clienteDao.consulta();
 	}
 
 	public void borrar(Cliente cliente) {
-		System.out.println("Borrando cliente controller -> " + cliente.toString());
+		LOG.info("Borrando cliente controller -> " + cliente.toString());
 		
 		boolean resultado = clienteDao.borrar(cliente);
 		
-		System.out.println("Resultado borrar cliente controller -> " + resultado);
+		LOG.info("Resultado borrar cliente controller -> " + resultado);
 		
 		cliente = new Cliente();
 		listaCliente = clienteDao.consulta();
 	}
 
 	public void editar(RowEditEvent event) {
-		System.out.println("Editar cliente controller -> ");
+		LOG.info("Editar cliente controller -> ");
 		clienteEditar = (Cliente) event.getObject();
 		
-		System.out.println("Elemento a editar Cliente controller -> " + clienteEditar.toString());
+		LOG.info("Elemento a editar Cliente controller -> " + clienteEditar.toString());
 		boolean resultado = clienteDao.editar(clienteEditar);
 		
-		System.out.println("Resultado editar cliente controller -> " + resultado);
+		LOG.info("Resultado editar cliente controller -> " + resultado);
 		
 		clienteEditar = new Cliente();
 		listaCliente = clienteDao.consulta();
 	}
 	
 	public void cancelarEdicion(RowEditEvent event) {
-    	System.out.println("Cancelar Editar fila");
+    	LOG.info("Cancelar Editar fila");
     }
 
 	public String getConceptoB() {
