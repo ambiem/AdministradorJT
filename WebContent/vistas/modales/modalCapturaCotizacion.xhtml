@@ -16,7 +16,12 @@
 				<p:selectOneMenu id="clienteModalCotizaciones" value="#{cotizacionBean.cotizacion.idCliente}"> 
 					<f:selectItem itemLabel="Seleccionar.."/> 
 					<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}"/> 
-					 <f:ajax listener="#{cotizacionBean.actualizarEmpresas}" render="empresaModalCotizaciones actualizarMontos" />
+					 <f:ajax listener="#{cotizacionBean.actualizarEmpresas}" render="empresaModalCotizaciones empresaModalCotizaciones porcentajeModalCotizacion" />
+					 <f:ajax render="totalPesosModalCotizacion" />
+					 <f:ajax render="comisionModalCotizacion" />
+					 <f:ajax render="totalComisionExtraModalCotizacion" />
+					 <f:ajax render="granTotalModalCotizacion" />
+					 <f:ajax render="tcPonderadoModalCotizacion" />
 				</p:selectOneMenu>	
 				 
 				<p:outputLabel for="empresaModalCotizaciones" value="Empresas" id="empresasModalCotizacion"/>
@@ -25,48 +30,60 @@
 				</p:selectOneMenu>	
 				
 				<p:outputLabel value="Porcentaje: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.porcentaje}" >
+				<p:outputLabel id="porcentajeModalCotizacion" value="#{cotizacionBean.cotizacion.porcentaje}" >
 					<f:convertNumber pattern="¤#,##0.00" currencySymbol="%"/>
 				</p:outputLabel>
 				
 				<p:outputLabel for="cantidadCotizacion" value="Cantidad: " />
 				<p:inputNumber id="cantidadCotizacion" value="#{cotizacionBean.cotizacion.cantidad}" required="true">
-					<f:ajax render="actualizarMontos" />
+					<f:ajax render="totalPesosModalCotizacion" />
+					<f:ajax render="comisionModalCotizacion" />
+					<f:ajax render="totalComisionExtraModalCotizacion" />
+					<f:ajax render="granTotalModalCotizacion" />
+					<f:ajax render="tcPonderadoModalCotizacion" />
 				</p:inputNumber>  
 				
 				<p:outputLabel for="tcCotizacion" value="TC: " />
 				<p:inputNumber id="tcCotizacion" value="#{cotizacionBean.cotizacion.tc}" required="true" decimalPlaces="4" >
-					<f:ajax render="actualizarMontos" />
+					<f:ajax render="totalPesosModalCotizacion" />
+					<f:ajax render="comisionModalCotizacion" />
+					<f:ajax render="totalComisionExtraModalCotizacion" />
+					<f:ajax render="granTotalModalCotizacion" />
+					<f:ajax render="tcPonderadoModalCotizacion" />
 				</p:inputNumber>  
 				
 				<p:outputLabel value="Total pesos: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.totalPesos}">
+				<p:outputLabel id="totalPesosModalCotizacion" value="#{cotizacionBean.cotizacion.totalPesos}">
 					<f:convertNumber pattern="¤#,##0.00" />
 				</p:outputLabel>
 				
 				<p:outputLabel value="Comision: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.comision}">
+				<p:outputLabel id="comisionModalCotizacion" value="#{cotizacionBean.cotizacion.comision}">
 					<f:convertNumber pattern="¤#,##0.00" />
 				</p:outputLabel>
 				
 				<p:outputLabel for="comisionExtraCotizacion" value="Comision Extra: " />
 				<p:inputNumber id="comisionExtraCotizacion" value="#{cotizacionBean.cotizacion.comisionExtra}" >
-					<f:ajax render="actualizarMontos" />
+					<f:ajax render="totalPesosModalCotizacion" />
+					<f:ajax render="comisionModalCotizacion" />
+					<f:ajax render="totalComisionExtraModalCotizacion" />
+					<f:ajax render="granTotalModalCotizacion" />
+					<f:ajax render="tcPonderadoModalCotizacion" />
 				</p:inputNumber> 
 				
 				<p:outputLabel value="Total Comision Extra: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.totalComisionExtra}" >
+				<p:outputLabel id="totalComisionExtraModalCotizacion" value="#{cotizacionBean.cotizacion.totalComisionExtra}" >
 					<f:convertNumber pattern="¤#,##0.00" />
 				</p:outputLabel>
 				
 				<p:outputLabel value="Gran total: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.granTotal}" >
+				<p:outputLabel id="granTotalModalCotizacion" value="#{cotizacionBean.cotizacion.granTotal}" >
 					<f:convertNumber pattern="¤#,##0.00" />
 				</p:outputLabel>
 
 				<p:outputLabel  value="TC Ponderado: " />
-				<p:outputLabel value="#{cotizacionBean.cotizacion.tcPonderado}" >
-					<f:convertNumber pattern="¤#,##0.00" />
+				<p:outputLabel id="tcPonderadoModalCotizacion" value="#{cotizacionBean.cotizacion.tcPonderado}" >
+					<f:convertNumber pattern="¤#,##0.0000" />
 				</p:outputLabel>
 				
 				<p:commandButton value="Grabar" action="#{cotizacionBean.agregar}" onclick="modalCapturaCotizacion.hide()" validateClient="true" tabindex="2"/>

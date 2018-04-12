@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+	<h:form>
+		<h:body>
+			
+			<p:dialog id="dialogAgregarMovimientoCte" header="Nueva Movimiento cliente" widgetVar="modalCapturaMovimientoCte" minHeight="50" resizable="false" modal="true" >
+				
+				<p:panelGrid id="panelEditarMovimientoCte" columns="2" style="border: none;">
+				
+					<p:outputLabel for="conceptoModalMovimientoCte" value="Concepto:" />
+					<p:inputText id="conceptoModalMovimientoCte"  value="#{movimientoCteBean.movimientoCte.concepto}" required="true"/> 
+					 
+					<p:outputLabel for="clienteModalMovimientoCte" value="Cliente" />
+					<p:selectOneMenu id="clienteModalMovimientoCte" value="#{movimientoCteBean.movimientoCte.idCliente}" required="true">
+						<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+					</p:selectOneMenu>	
+	
+					<p:outputLabel for="montoModalMovimientoCte" value="Monto" />
+					<p:inputNumber id="montoModalMovimientoCte" value="#{movimientoCteBean.movimientoCte.monto}" required="true"/> 
+					
+					<p:outputLabel for="tipoEntradaMovimientoCte" value="Tipo operacion" />
+					<p:selectOneRadio id="tipoEntradaMovimientoCte" value="#{movimientoCteBean.movimientoCte.tipoMovimiento}" required="true">
+						<f:selectItem itemLabel="Abono" itemValue="1" />
+						<f:selectItem itemLabel="Cargo" itemValue="2" />
+					</p:selectOneRadio>
+					
+					<p:commandButton value="Grabar" action="#{movimientoCteBean.agregar}" onclick="modalCapturaMovimientoCte.hide()" tabindex="1"/>
+					<p:commandButton value="Cancelar" onclick="modalCapturaMovimientoCte.hide()" immediate="true"/>
+				</p:panelGrid>
+			</p:dialog>
+		</h:body>
+	</h:form>
+</html>

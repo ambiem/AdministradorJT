@@ -17,23 +17,23 @@
 					<p:panelGrid columns="4" layout="grid" style="border: none;">
 					
 						<p:outputLabel for="concepto" value="Concepto:" />
-						<p:inputText id="concepto" value="#{entradasSalidasBean.conceptoB}"/>
+						<p:inputText id="concepto" value="#{movimientoCteBean.conceptoB}"/>
 		
 						<p:outputLabel for="tipoMovimiento" value="Tipo Movimiento:" />
-						<p:selectOneMenu id="tipoMovimiento" label="Tipo movimiento"  value="#{entradasSalidasBean.tipoMovimientoB}" >
+						<p:selectOneMenu id="tipoMovimiento" label="Tipo movimiento"  value="#{movimientoCteBean.tipoMovimientoB}" > 
 							<f:selectItem itemLabel="Seleccione.."/> 
-							<f:selectItem itemLabel="Entradas" itemValue="1" />
-							<f:selectItem itemLabel="Salidas" itemValue="2" />
+							<f:selectItem itemLabel="Abono" itemValue="1" />
+							<f:selectItem itemLabel="Cargo" itemValue="2" />
 						</p:selectOneMenu>
 						
 						<p:outputLabel for="fechaInicio" value="Fecha Inicio:" />
-						<p:calendar id="fechaInicio" value="#{entradasSalidasBean.fechaInicioB}" />
+						<p:calendar id="fechaInicio" value="#{movimientoCteBean.fechaInicioB}" />
 		
 						<p:outputLabel for="fechaFin" value="Fecha Fin:" />
-						<p:calendar id="fechaFin" value="#{entradasSalidasBean.fechaFinB}" />
+						<p:calendar id="fechaFin" value="#{movimientoCteBean.fechaFinB}" />
 						
 						<p:outputLabel for="clienteEntrada" value="Cliente" />
-						<p:selectOneMenu id="clienteEntrada" value="#{entradasSalidasBean.clienteB}"> 
+						<p:selectOneMenu id="clienteEntrada" value="#{movimientoCteBean.clienteB}"> 
 							<f:selectItem itemLabel="Seleccione.."/> 
 							<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
 						</p:selectOneMenu>	
@@ -41,36 +41,36 @@
 					</p:panelGrid>
 		
 					<p:panelGrid columns="2" layout="grid"  style="border: none;  text-align:center;">
-						<p:commandButton update="tablaOperaciones" value="Buscar" action="#{entradasSalidasBean.buscar}"/>
-						<p:commandButton update="tablaOperaciones" value="Buscar Todo" action="#{entradasSalidasBean.buscarTodo}"/> 
+						<p:commandButton update="tablaMovimientos" value="Buscar" action="#{movimientoCteBean.buscar}"/>
+						<p:commandButton update="tablaMovimientos" value="Buscar Todo" action="#{movimientoCteBean.buscarTodo}"/> 
 					</p:panelGrid>
 				</p:panel>
 		
 				<p:panel id="panelCaptura" header="Captura" style="border: none;">
 					<p:panelGrid columns="1" layout="grid" style="border: none; text-align:center;">
-						<p:commandButton value="Nueva Operacion" type="button" onclick="PF('modalCapturaEntrada').show();" />
+						<p:commandButton value="Nueva Operacion" type="button" onclick="PF('modalCapturaMovimientoCte').show();" />
 					</p:panelGrid>
 				</p:panel>
 		
-				<p:dataTable id="tablaOperaciones" var="operaciones" value="#{entradasSalidasBean.listaEntradaSalida}" editable="true" paginator="true"  rows="30"> 
+				<p:dataTable id="tablaMovimientos" var="movimientos" value="#{movimientoCteBean.listaMovimientoCte}" editable="true" paginator="true"  rows="30"> 
 					
-					<p:ajax event="rowEdit" listener="#{entradasSalidasBean.editar}" update="tablaOperaciones"/>
-       				<p:ajax event="rowEditCancel" listener="#{entradasSalidasBean.cancelarEdicion}" />  
+					<p:ajax event="rowEdit" listener="#{movimientoCteBean.editar}" update="tablaMovimientos"/>
+       				<p:ajax event="rowEditCancel" listener="#{movimientoCteBean.cancelarEdicion}" />  
        				
 					<p:column headerText="Fecha">
 						<p:cellEditor>
-							<f:facet name="output"><h:outputText value="#{operaciones.fecha}" /></f:facet>
+							<f:facet name="output"><h:outputText value="#{movimientos.fecha}" /></f:facet>
 	               			<f:facet name="input">
-	               				<p:calendar value="#{operaciones.fecha}" style="width:100%"/>
+	               				<p:calendar value="#{movimientos.fecha}" style="width:100%"/>
 	               			</f:facet>
 	               		</p:cellEditor>
 					</p:column>
 		
 					<p:column headerText="Concepto">
 						<p:cellEditor >
-							<f:facet name="output"><h:outputText value="#{operaciones.concepto}" /></f:facet>
+							<f:facet name="output"><h:outputText value="#{movimientos.concepto}" /></f:facet>
 							<f:facet name="input">
-								<p:inputText value="#{operaciones.concepto}"/>
+								<p:inputText value="#{movimientos.concepto}"/>
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -78,53 +78,47 @@
 					<p:column headerText="Cliente">
 						<p:cellEditor>
 						 	<f:facet name="output">
-						 		<h:outputText  value="#{operaciones.nombreCliente}" />
+						 		<h:outputText  value="#{movimientos.nombreCliente}" />
 						 	</f:facet>
 						 	<f:facet name="input">
-								<p:selectOneMenu value="#{operaciones.idCliente}">
+								<p:selectOneMenu value="#{movimientos.idCliente}">
 									<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
 								</p:selectOneMenu>					 		
 						 	</f:facet>
 						 </p:cellEditor>
 					</p:column>
 		
-					<p:column headerText="Entrada">
-							<p:cellEditor rendered="#{operaciones.tipoOperacion == 1}">
+					<p:column headerText="Abono">
+							<p:cellEditor rendered="#{movimientos.tipoMovimiento == 1}">
 								<f:facet name="output">
-									<h:outputText value="#{operaciones.monto}" >
+									<h:outputText value="#{movimientos.monto}" >
 										<f:convertNumber pattern="¤#,##0.00" />
 									</h:outputText>
 								</f:facet>
 								<f:facet name="input">
-									<p:inputText value="#{operaciones.monto}"/>
+									<p:inputText value="#{movimientos.monto}"/>
 								</f:facet>
 							</p:cellEditor>
 					</p:column>
 		
-					<p:column headerText="Salida">
-							<p:cellEditor rendered="#{operaciones.tipoOperacion == 2}">
+					<p:column headerText="Cargo">
+							<p:cellEditor rendered="#{movimientos.tipoMovimiento == 2}">
 								<f:facet name="output">
-									<h:outputText value="#{operaciones.monto}" >
+									<h:outputText value="#{movimientos.monto}" >
 										<f:convertNumber pattern="¤#,##0.00" />
 									</h:outputText>
 								</f:facet>
 								<f:facet name="input">
-									<p:inputText value="#{operaciones.monto}"/>
+									<p:inputText value="#{movimientos.monto}"/>
 								</f:facet>
 							</p:cellEditor>
-					</p:column>
-		
-					<p:column headerText="Saldo">
-						<h:outputText value="#{operaciones.saldo}" >
-							<f:convertNumber pattern="¤#,##0.00" />
-						</h:outputText>
 					</p:column>
 		
 					<p:column headerText="Editar" style="width:50px;">
 		 	           	<p:rowEditor />
 					</p:column>
 					<p:column headerText="Borrar" style="width:60px;">
-		 	            	<p:commandButton update="tablaOperaciones" label="borrar" title="X" actionListener="#{entradasSalidasBean.borrar(operaciones)}" >
+		 	            	<p:commandButton update="tablaMovimientos" label="borrar" title="X" actionListener="#{movimientoCteBean.borrar(operaciones)}" >
 			 	            	<p:confirm header="Confirmar borrar" message="¿Estas seguro de borrar?" icon="ui-icon-alert" />
 							</p:commandButton>
 							

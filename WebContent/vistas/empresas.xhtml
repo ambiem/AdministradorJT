@@ -85,7 +85,14 @@
 				<p:rowEditor />
 			</p:column>
 			<p:column headerText="Borrar" style="width:60px;">
-				<p:commandButton update="tablaEmpresas" label="borrar" title="X" action="#{empresaBean.borrar(empresas)}" />
+				<p:commandButton update="tablaEmpresas" label="borrar" title="X" action="#{empresaBean.borrar(empresas)}" >
+					<p:confirm header="Confirmar borrar" message="¿Estas seguro de borrar?" icon="ui-icon-alert" />
+				</p:commandButton>
+							
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				    <p:commandButton value="Si" styleClass="ui-confirmdialog-yes"/>
+					<p:commandButton value="No" styleClass="ui-confirmdialog-no"/>
+				</p:confirmDialog>
 			</p:column>
 
 		</p:dataTable>
