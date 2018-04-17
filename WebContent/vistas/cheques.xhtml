@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+	<ui:include src="modales/modalCapturaCheques.xhtml"/>
+</h:head>
+
+<h:form >
+	<h:body>
+		<p:panel id="panelBusquedaCheques" header="Busqueda" style="border: none;">
+			<p:panelGrid columns="4" layout="grid" style="border: none;">
+			
+				<p:outputLabel for="conceptoCheques" value="Concepto:" />
+				<p:inputText id="conceptoCheques" value="#{chequeBean.conceptoB}"/>
+
+				<p:outputLabel for="clienteCheques" value="Cliente" />
+				<p:selectOneMenu id="clienteCheques" value="#{chequeBean.clienteB}">
+					<f:selectItem itemLabel="Seleccione.."/> 
+					<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+				</p:selectOneMenu>		
+				
+				<p:outputLabel for="fechaInicioCheques" value="Fecha Inicio:" />
+				<p:calendar id="fechaInicioCheques" value="#{chequeBean.fechaInicioB}"/>
+
+				<p:outputLabel for="fechaFinCheques" value="Fecha Fin:" />
+				<p:calendar id="fechaFinCheques" value="#{chequeBean.fechaFinB}" />
+
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" layout="grid"  style="border: none;  text-align:center;">
+				<p:commandButton update="tablaCheques" value="Buscar" action="#{chequeBean.buscar}" />
+				<p:commandButton update="tablaCheques" value="Buscar Todo" action="#{chequeBean.buscarTodo}"/>
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:panel id="panelCapturaCheques" header="Captura" style="border: none;">
+			<p:panelGrid columns="1" layout="grid" style="border: none; text-align:center;">
+				<p:commandButton value="Nuevo Cheque" type="button" onclick="PF('modalCapturaCheque').show();" />
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:dataTable id="tablaCheques" var="cheques" value="#{chequeBean.listaCheques}" editable="true" paginator="true"  rows="30"> 
+		
+			<p:ajax event="rowEdit" listener="#{chequeBean.editar}" />
+       		<p:ajax event="rowEditCancel" listener="#{chequeBean.cancelarEdicion}" />  
+       				
+			<p:column headerText="Fecha">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{cheques.fecha}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:calendar value="#{cheques.fecha}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Nombre">
+				<p:cellEditor>
+				 	<f:facet name="output">
+				 		<h:outputText  value="#{cheques.concepto}" />
+				 	</f:facet>
+				 	<f:facet name="input">
+						<p:inputText value="#{cheques.concepto}" />				 		
+				 	</f:facet>
+				 </p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Cliente">
+				<p:cellEditor>
+				 	<f:facet name="output">
+				 		<h:outputText  value="#{cheques.nombreCliente}" />
+				 	</f:facet>
+				 	<f:facet name="input">
+						<p:selectOneMenu value="#{cheques.idCliente}">
+							<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+						</p:selectOneMenu>					 		
+				 	</f:facet>
+				 </p:cellEditor>
+			</p:column>
+			
+			<p:column headerText="Monto">
+				<p:cellEditor>
+				 	<f:facet name="output">
+				 		<h:outputText  value="#{cheques.monto}" />
+				 	</f:facet>
+				 	<f:facet name="input">
+						<p:inputNumber value="#{cheques.monto}" />				 		
+				 	</f:facet>
+				 </p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Editar" style="width:50px;">
+				<p:rowEditor />
+			</p:column>
+			<p:column headerText="Borrar" style="width:60px;">
+				<p:commandButton update="tablaCheques" label="borrar" title="X" action="#{chequeBean.borrar(cheques)}" />
+			</p:column>
+
+		</p:dataTable>
+	</h:body>
+</h:form>
+</html>
