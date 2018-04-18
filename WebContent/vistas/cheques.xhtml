@@ -101,10 +101,17 @@
 			<p:column headerText="Editar" style="width:50px;">
 				<p:rowEditor />
 			</p:column>
+			
 			<p:column headerText="Borrar" style="width:60px;">
-				<p:commandButton update="tablaCheques" label="borrar" title="X" action="#{chequeBean.borrar(cheques)}" />
+		 	   	<p:commandButton update="tablaCheques" label="borrar" title="X" actionListener="#{chequeBean.borrar(cheques)}" >
+			       	<p:confirm header="Confirmar borrar" message="¿Estas seguro de borrar?" icon="ui-icon-alert" />
+				</p:commandButton>
+							
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			        <p:commandButton value="Si" styleClass="ui-confirmdialog-yes"/>
+			        <p:commandButton value="No" styleClass="ui-confirmdialog-no"/>
+			    </p:confirmDialog>
 			</p:column>
-
 		</p:dataTable>
 	</h:body>
 </h:form>

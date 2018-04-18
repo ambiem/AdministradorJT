@@ -1,6 +1,8 @@
 package com.mx.admin.dao.impl;
 
 import java.sql.Types;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,7 +32,7 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 	private static final String CONCEPTO_V = "CONCEPTO_V";
 	private static final String OPERACION_ID = "OPERACION_ID";
 	private static final String CONSULTA_SELECT_TODO = "SELECT OPERACION.ID_OPERACION, OPERACION.CONCEPTO, OPERACION.MONTO, OPERACION.TIPO_OPERACION, OPERACION.FECHA, OPERACION.SALDO, OPERACION.ID_CLIENTE, CLIENTE.NOMBRE FROM OPERACION, CLIENTE WHERE OPERACION.ACTIVO = 1 AND CLIENTE.ID_CLIENTE = OPERACION.ID_CLIENTE ORDER BY ID_OPERACION DESC";
-	private static final String CONSULTA_BUSQUEDA = "SELECT OPERACION.ID_OPERACION, OPERACION.CONCEPTO, OPERACION.MONTO, OPERACION.TIPO_OPERACION, OPERACION.FECHA, OPERACION.SALDO, OPERACION.ID_CLIENTE, CLIENTE.NOMBRE FROM OPERACION, CLIENTE WHERE (OPERACION.CONCEPTO LIKE :concepto OR OPERACION.TIPO_OPERACION = :tipoOperacion OR OPERACION.FECHA BETWEEN :fechaInicio AND :fechaFin OR OPERACION.ID_CLIENTE =:idCliente) AND OPERACION.ACTIVO = 1 AND CLIENTE.ID_CLIENTE = OPERACION.ID_CLIENTE ORDER BY ID_OPERACION DESC";
+	private static final String CONSULTA_BUSQUEDA = "SELECT OPERACION.ID_OPERACION, OPERACION.CONCEPTO, OPERACION.MONTO, OPERACION.TIPO_OPERACION, OPERACION.FECHA, OPERACION.SALDO, OPERACION.ID_CLIENTE, CLIENTE.NOMBRE FROM OPERACION, CLIENTE WHERE (OPERACION.CONCEPTO LIKE :concepto OR OPERACION.TIPO_OPERACION = :tipoOperacion OR OPERACION.FECHA BETWEEN TO_DATE(:fechaInicio, 'dd/mm/yyyy') AND TO_DATE(:fechaFin, 'dd/mm/yyyy') OR OPERACION.ID_CLIENTE =:idCliente) AND OPERACION.ACTIVO = 1 AND CLIENTE.ID_CLIENTE = OPERACION.ID_CLIENTE ORDER BY ID_OPERACION DESC";
 	private static final String CLIENTE_ID = "CLIENTE_V";
 	
 	private static final Logger LOG = Logger.getLogger(EntradaSalidaDaoImpl.class);
@@ -92,13 +94,13 @@ public class EntradaSalidaDaoImpl implements EntradaSalidaDao {
 	public List<EntradaSalida> buscar(String conceptoB, Integer tipoMovimientoB, Date fechaInicioB, Date fechaFinB, Integer clienteB) {
 		List<EntradaSalida> operaciones = new ArrayList<EntradaSalida>();
 		LOG.info("Busqueda operacion dao -> concepto: " + conceptoB + " tipoMovimiento: " + tipoMovimientoB + " fechaInicio: " + fechaInicioB + " fechaFin: " + fechaFinB);
-		
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();
 			namedParameters.put("concepto", conceptoB);
 			namedParameters.put("tipoOperacion", tipoMovimientoB);
-			namedParameters.put("fechaInicio", fechaInicioB);
-			namedParameters.put("fechaFin", fechaFinB);
+			namedParameters.put("fechaInicio", fechaInicioB != null ? df.format(fechaInicioB) : fechaInicioB);
+			namedParameters.put("fechaFin", fechaFinB != null ? df.format(fechaFinB) : fechaFinB);
 			namedParameters.put("idCliente", clienteB);
 			
 			operaciones = namedParameterJdbcTemplate.query(CONSULTA_BUSQUEDA,namedParameters, new EntradaSalidaMapper());

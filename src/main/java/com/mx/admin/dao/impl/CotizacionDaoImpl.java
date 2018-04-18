@@ -1,5 +1,7 @@
 package com.mx.admin.dao.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +23,7 @@ public class CotizacionDaoImpl implements CotizacionDao{
 	private static final String CONSULTA_INSERT = "INSERT INTO COTIZACION (CANTIDAD, TC, PORCENTAJE, TOTALPESOS, COMISION, COMISIONEXTRA, TOTAL, TCPONDERADO, ID_CLIENTE, ID_EMPRESA, FECHA, TOTALCOMISIONEXTRA) VALUES (:cantidad, :tc, :porcentaje, :totalPesos, :comision, :comisionExtra, :total, :tcPonderado, :cliente, :empresa, :fecha, :totalComisionExtra)";
 	private static final String CONSULTA_UPDATE = "UPDATE COTIZACION SET CANTIDAD = :cantidad, TC = :tc, PORCENTAJE = :porcentaje, TOTALPESOS = :totalPesos, COMISION = :comision, COMISIONEXTRA = :comisionExtra, TOTAL = :total, TCPONDERADO = :tcPonderado, ID_CLIENTE = :cliente, ID_EMPRESA = :empresa, FECHA = :fecha, TOTALCOMISIONEXTRA = :totalComisionExtra  WHERE ID_COTIZACION = :idCotizacion";
 	private static final String CONSULTA_SELECT_TODO = "SELECT COTIZACION.ID_COTIZACION, COTIZACION.CANTIDAD, COTIZACION.TC, COTIZACION.PORCENTAJE, COTIZACION.TOTALPESOS, COTIZACION.COMISION, COTIZACION.COMISIONEXTRA, COTIZACION.TOTAL, COTIZACION.TCPONDERADO, COTIZACION.FECHA, COTIZACION.ID_CLIENTE, COTIZACION.ID_EMPRESA, COTIZACION.TOTALCOMISIONEXTRA, CLIENTE.NOMBRE, EMPRESA.NOMBRE FROM COTIZACION, CLIENTE, EMPRESA WHERE COTIZACION.ID_CLIENTE = CLIENTE.ID_CLIENTE AND COTIZACION.ID_EMPRESA = EMPRESA.ID_EMPRESA ORDER BY COTIZACION.ID_COTIZACION DESC";
-	private static final String CONSULTA_BUSQUEDA = "SELECT COTIZACION.ID_COTIZACION, COTIZACION.CANTIDAD, COTIZACION.TC, COTIZACION.PORCENTAJE, COTIZACION.TOTALPESOS, COTIZACION.COMISION, COTIZACION.COMISIONEXTRA, COTIZACION.TOTAL, COTIZACION.TCPONDERADO, COTIZACION.FECHA, COTIZACION.ID_CLIENTE, COTIZACION.ID_EMPRESA, COTIZACION.TOTALCOMISIONEXTRA, CLIENTE.NOMBRE, EMPRESA.NOMBRE FROM COTIZACION, EMPRESA, CLIENTE WHERE (COTIZACION.ID_EMPRESA = :empresa OR COTIZACION.ID_CLIENTE = :cliente OR COTIZACION.FECHA BETWEEN :fechaInicio AND :fechaFin) AND COTIZACION.ID_CLIENTE = CLIENTE.ID_CLIENTE AND COTIZACION.ID_EMPRESA = EMPRESA.ID_EMPRESA ORDER BY COTIZACION.ID_COTIZACION DESC";
+	private static final String CONSULTA_BUSQUEDA = "SELECT COTIZACION.ID_COTIZACION, COTIZACION.CANTIDAD, COTIZACION.TC, COTIZACION.PORCENTAJE, COTIZACION.TOTALPESOS, COTIZACION.COMISION, COTIZACION.COMISIONEXTRA, COTIZACION.TOTAL, COTIZACION.TCPONDERADO, COTIZACION.FECHA, COTIZACION.ID_CLIENTE, COTIZACION.ID_EMPRESA, COTIZACION.TOTALCOMISIONEXTRA, CLIENTE.NOMBRE, EMPRESA.NOMBRE FROM COTIZACION, EMPRESA, CLIENTE WHERE (COTIZACION.ID_EMPRESA = :empresa OR COTIZACION.ID_CLIENTE = :cliente OR COTIZACION.FECHA BETWEEN TO_DATE(:fechaInicio, 'dd/mm/yyyy') AND TO_DATE(:fechaFin, 'dd/mm/yyyy')) AND COTIZACION.ID_CLIENTE = CLIENTE.ID_CLIENTE AND COTIZACION.ID_EMPRESA = EMPRESA.ID_EMPRESA ORDER BY COTIZACION.ID_COTIZACION DESC";
 	private static final String CONSULTA_DELETE = "DELETE FROM COTIZACION WHERE ID_COTIZACION = :idCotizacion";
 	
 	private static final Logger LOG = Logger.getLogger(CotizacionDaoImpl.class);
@@ -35,13 +37,13 @@ public class CotizacionDaoImpl implements CotizacionDao{
 	public List<Cotizacion> buscar(Integer clienteB, Integer empresaB, Date fechaInicioB, Date fechaFinB) {
 		List<Cotizacion> listaCotizaciones = new ArrayList<Cotizacion>();
 		LOG.info("Busqueda parametros cotizacion dao -> clienteB: " + clienteB + " empresa: " + empresaB + " fechaInicio: "+ fechaInicioB + " fechaFin: " + fechaFinB);
-		
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			Map<String, Comparable> namedParameters = new HashMap();
 			namedParameters.put("empresa", empresaB);
 			namedParameters.put("cliente", clienteB);
-			namedParameters.put("fechaInicio", fechaInicioB);
-			namedParameters.put("fechaFin", fechaFinB);
+			namedParameters.put("fechaInicio", fechaInicioB != null ? df.format(fechaInicioB) : fechaInicioB);
+			namedParameters.put("fechaFin", fechaFinB != null ? df.format(fechaFinB) : fechaInicioB);
 			
 			listaCotizaciones = namedParameterJdbcTemplate.query(CONSULTA_BUSQUEDA, namedParameters, new CotizacionMapper());
 			

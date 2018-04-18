@@ -45,7 +45,7 @@ public class CotizacionView implements Serializable{
 		}
 		
 		if(this.granTotal != null && this.cantidad != null){
-			setTcPonderado(granTotal.divide(this.cantidad, 8, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP));
+			setTcPonderado(granTotal.divide(this.cantidad, 8, RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP));
 		}
 	}
 
@@ -126,7 +126,7 @@ public class CotizacionView implements Serializable{
 		this.granTotal = granTotal;
 		
 		if(this.granTotal != null && this.cantidad != null){
-			setTcPonderado(granTotal.divide(this.cantidad, 8, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP));
+			setTcPonderado(granTotal.divide(this.cantidad, 8, RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP));
 		}
 	}
 

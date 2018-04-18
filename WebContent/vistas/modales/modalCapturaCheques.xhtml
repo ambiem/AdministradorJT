@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/theme.css" library="css" />
+</h:head>
+	<h:form>
+		<h:body>
+			<p:dialog id="dialogAgregarCheque" header="Nuevo Cheque" widgetVar="modalCapturaCheque" minHeight="50" resizable="false" modal="true" >
+				
+				<p:panelGrid columns="2" style="border: none;">
+				
+					<p:outputLabel for="conceptoModalCheque" value="Concepto:" />
+					<p:inputText id="conceptoModalCheque"  value="#{chequeBean.cheque.concepto}" required="true"/>
+					
+					<p:outputLabel for="montoModalCheque" value="Monto:" />
+					<p:inputNumber id="montoModalCheque" value="#{chequeBean.cheque.monto}" />		
+					 
+					<p:outputLabel for="clienteModalCheque" value="Cliente" />
+					<p:selectOneMenu id="clienteModalCheque" value="#{chequeBean.cheque.idCliente}" required="true">
+						<f:selectItem itemLabel="Seleccione.." />
+						<f:selectItems value="#{clienteBean.listaCliente}" var="cliente" itemLabel="#{cliente.nombre}" itemValue="#{cliente.idCliente}" /> 
+					</p:selectOneMenu>	
+					
+					<p:commandButton value="Grabar" action="#{chequeBean.agregar}" onclick="modalCapturaCheque.hide()" tabindex="4"/>
+					<p:commandButton value="Cancelar" onclick="modalCapturaCheque.hide()" immediate="true"/>
+				</p:panelGrid>
+			</p:dialog>
+		</h:body>
+	</h:form>
+</html>

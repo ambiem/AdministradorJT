@@ -52,6 +52,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
+
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
@@ -92,12 +93,11 @@
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/cn.easyproject/ojdbc7 -->
 		<dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.3</version>
-        </dependency>
+			<groupId>oracle</groupId>
+			<artifactId>ojdbc</artifactId>
+			<version>7</version>
+		</dependency>
 
 	</dependencies>
 	<build>

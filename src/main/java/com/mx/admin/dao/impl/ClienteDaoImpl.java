@@ -19,7 +19,7 @@ public class ClienteDaoImpl implements ClienteDao{
 	
 	private static final String CONSULTA_INSERT = "INSERT INTO CLIENTE (NOMBRE, CONCEPTO, PORCENTAJE, FECHA, ACTIVO) VALUES (:nombre, :concepto, :porcentaje, :fecha, 1)";
 	private static final String CONSULTA_UPDATE = "UPDATE CLIENTE SET CONCEPTO = :concepto, PORCENTAJE = :porcentaje, FECHA = :fecha, NOMBRE =:nombre WHERE ID_CLIENTE = :idCliente";
-	private static final String CONSULTA_SELECT_TODO = "SELECT * FROM CLIENTE WHERE ACTIVO = 1 ORDER BY ID_CLIENTE DESC";
+	private static final String CONSULTA_SELECT_TODO = "SELECT * FROM CLIENTE WHERE ACTIVO = 1 ORDER BY NOMBRE";
 	private static final String CONSULTA_BUSQUEDA = "SELECT * FROM CLIENTE WHERE (CONCEPTO LIKE :concepto OR NOMBRE =:nombre) AND ACTIVO = 1 ORDER BY ID_CLIENTE DESC";
 	private static final String CONSULTA_DELETE = "UPDATE CLIENTE SET ACTIVO = 0 WHERE ID_CLIENTE = :idCliente";
 	private static final String CONSULTA_CLIENTE_ID = "SELECT * FROM CLIENTE WHERE ID_CLIENTE =:idCliente";
